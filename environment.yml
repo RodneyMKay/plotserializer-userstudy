@@ -1,0 +1,13 @@
+name: mt-dev
+channels:
+  - defaults
+dependencies:
+  - nb_conda
+  - notebook
+  - python
+  - numpy
+  - pandas
+  - matplotlib
+  - pip
+#  - pip:
+#    - example-package-name
