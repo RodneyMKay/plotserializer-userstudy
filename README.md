@@ -53,7 +53,7 @@ This will create a conda environment with the packages that you need for the sta
 
 :warning: @WIMI: ADJUST THE NAME OF THE ENVIRONMENT IF NEEDED (e.g. with initials)
 ```bash
-conda activate xy-dev
+conda activate mt-dev
 ```
 Update the `environment.yml` file when you install new packages.
 
