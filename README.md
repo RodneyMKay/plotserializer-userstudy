@@ -1,4 +1,6 @@
 # Getting Started
+You will find a lot of useful information in the [student Wiki](https://git.rwth-aachen.de/fst-tuda/projects/wiki/stud/-/wikis/home).
+
 ## Python and VS Code
 ### Install git
 Install git on your operating system following [these instructions](https://git-scm.com/book/de/v2/Erste-Schritte-Git-installieren)
