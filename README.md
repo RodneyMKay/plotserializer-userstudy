@@ -1,6 +1,6 @@
-[[_TOC_]]
+# Overview
 
-# Getting Started
+[[_TOC_]]
 
 ## Common Infrastructure
 ### Install git
