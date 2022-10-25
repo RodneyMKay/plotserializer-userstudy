@@ -53,6 +53,8 @@ py -m pip install -r requirements.txt
 
 Update the `requirements.txt` file when you install new packages.
 
+For more detailed instructions, check https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/.
+
 # Writing Good Code
 
 ## Language Rules
