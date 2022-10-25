@@ -35,9 +35,9 @@ from the shell of your choice (e.g., cmd). If no errors pop up, you are ready to
 ### Clone this repository wherever you want to have it
 Access the folder/directory of your choice and clone (make a local copy) of this repository on your machine by running
 
-:warning: @WIMI: ADJUST THIS LINK
+:warning: ADJUST THIS LINK
 ```bash
-git clone https://git.rwth-aachen.de/fst-tuda/projects/emergencity/bt-minimalbetrieb.git
+git clone https://git.rwth-aachen.de/fst-tuda/projects/emergencity/project-name.git
 ```
 
 If the authentication fails, you might need to add the ssh key beforehands - this will be the case if you want to access GitLab from a new machine.
@@ -51,9 +51,9 @@ conda env create -f environment.yml
 ```
 This will create a conda environment with the packages that you need for the start. Activate the environment using
 
-:warning: @WIMI: ADJUST THE NAME OF THE ENVIRONMENT IF NEEDED (e.g. with initials)
+:warning: ADJUST THE NAME OF THE ENVIRONMENT IF NEEDED (e.g. with initials)
 ```bash
-conda activate mt-dev
+conda activate py-dev
 ```
 Update the `environment.yml` file when you install new packages.
 
