@@ -6,4 +6,5 @@ sphinx # documentation
 flake8 # linting
 black # autoformatting
 mypy # typechecking
+pytest # unit testing
 
