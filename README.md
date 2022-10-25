@@ -7,12 +7,7 @@ Install git on your operating system following [these instructions](https://git-
 ### Install VS Code
 [Install VS Code](https://code.visualstudio.com/) on the operating system of your choice.
 
-After the installation is finished, it is recommended to install the following extensions to assist you when writing code:
-* Python
-* Pylance
-* Jupyter
-* Python Docstring Generator (Nils Werner)
-* Highlight Trailing Whitespace (Yves Baumes)
+After the installation is finished, you can install extensions of your choice. This project contains extension recommendations in the `.vscode/extensions.json` file. 
 
 Note that there are hundreds of other extensions that can support you in various tasks - it is worth looking for tips and tricks online. We leave this up to you and name only the most basic ones for the start.
 
