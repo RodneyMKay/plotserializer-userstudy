@@ -25,11 +25,10 @@ cache:
 
 before_script:
   - python --version  # For debugging
-#  - pip install virtualenv
-#  - virtualenv venv
-  - conda env create -n environment.yml
-  - conda activate py-dev 
-
+  - pip install virtualenv
+  - virtualenv venv
+  - source venv/bin/activate
+  - pip install -r requirements.txt
 
 lint:
   tags: 
