@@ -2,9 +2,9 @@ name: py-dev
 channels:
   - defaults
 dependencies:
+  - python=3.9
   - nb_conda
   - notebook
-  - python
   - numpy
   - pandas
   - matplotlib
