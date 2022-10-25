@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "njpwerner.autodocstring",
+        "naumovs.color-highlight",
+        "ybaumes.highlight-trailing-white-spaces"
+    ]
+}
