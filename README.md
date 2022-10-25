@@ -9,24 +9,12 @@ Install git on your operating system following [these instructions](https://git-
 ### Install VS Code
 [Install VS Code](https://code.visualstudio.com/) on the operating system of your choice.
 
-After the installation is finished, you can install extensions of your choice. This project contains extension recommendations in the `.vscode/extensions.json` file. 
+After the installation is finished, you can install extensions of your choice. This project contains extension recommendations in the `.vscode/extensions.json` file.
 
 Note that there are hundreds of other extensions that can support you in various tasks - it is worth looking for tips and tricks online. We leave this up to you and name only the most basic ones for the start.
 
-### Install anaconda
+### Install pip
 [Install Anaconda](https://docs.anaconda.com/anaconda/install/). If installing on Windows, open Anaconda prompt after installation and run
-
-```bash
-conda init
-```
-You might need to run this command also from the Windows PowerShell/cmd shell.
-
-To check whether conda has been installed properly, run
-
-```bash
-conda --version
-```
-from the shell of your choice (e.g., cmd). If no errors pop up, you are ready to go!
 
 ### Clone this repository wherever you want to have it
 Access the folder/directory of your choice and clone (make a local copy) of this repository on your machine by running
@@ -39,19 +27,34 @@ git clone https://git.rwth-aachen.de/fst-tuda/projects/emergencity/project-name.
 If the authentication fails, you might need to add the ssh key beforehands - this will be the case if you want to access GitLab from a new machine.
 
 
-### Create a Conda environment to get the basic required packages
-Run
+### Create a virtual environment to get the required packages
+On Windows, run
 
-```bash
-conda env create -f environment.yml
+```cmd
+py -m venv env
 ```
-This will create a conda environment with the packages that you need for the start. Activate the environment using
+The second argument is the location to create the virtual environment. Generally, you can just create this in your project and call it env.
 
-:warning: ADJUST THE NAME OF THE ENVIRONMENT IF NEEDED (e.g. with initials)
-```bash
-conda activate py-dev
+venv will create a virtual Python installation in the env folder.
+
+Before you can start installing or using packages in your virtual environment you’ll need to activate it. Activating a virtual environment will put the virtual environment-specific python and pip executables into your shell’s PATH.
+
+```cmd
+.\env\Scripts\activate
 ```
-Update the `environment.yml` file when you install new packages.
+
+You can confirm you’re in the virtual environment by checking the location of your Python interpreter:
+
+```cmd
+where python
+```
+Tell pip to install all of the packages in the `requirements.txt` file using the -r flag:
+
+```cmd
+py -m pip install -r requirements.txt
+```
+
+Update the `requirements.txt` file when you install new packages.
 
 # Writing Good Code
 
@@ -63,16 +66,16 @@ This project uses the `flake8` linter. Linting is a static code analysis for fin
 `flake8` will inform you about pep8 errors upon saving directly in the editor by underlining the relevant parts of code.
 
 ### Autoformatting
-This project uses the `black` autoformatter and formats your code on save. Autoformatted code will look the same regardless of who wrote it and regardless of the project, so that you can focus more on the content. 
+This project uses the `black` autoformatter and formats your code on save. Autoformatted code will look the same regardless of who wrote it and regardless of the project, so that you can focus more on the content.
 
 ### Type Checking
-This project uses the type checker `mypy` to run a static type checking analysis.  
+This project uses the type checker `mypy` to run a static type checking analysis.
 
 :warning: Provide type checking information wherever relevant, i.e. in all functions and classes.
 
 ## Style Rules
 ### Documentation
-Documentation is an essential part of writing code. 
+Documentation is an essential part of writing code.
 
 :warning: All public functions, methods and classes must be properly documented with docstrings.
 
