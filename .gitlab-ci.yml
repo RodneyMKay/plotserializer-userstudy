@@ -27,8 +27,10 @@ before_script:
   - python --version  # For debugging
 #  - pip install virtualenv
 #  - virtualenv venv
+  - conda init bash
+  - source ~/.bashrc    # <- !!!
   - conda env create -n environment.yml
-  - conda activate py-dev
+  - conda activate py-dev 
 
 
 lint:
