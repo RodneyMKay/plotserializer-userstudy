@@ -13,9 +13,6 @@ After the installation is finished, you can install extensions of your choice. T
 
 Note that there are hundreds of other extensions that can support you in various tasks - it is worth looking for tips and tricks online. We leave this up to you and name only the most basic ones for the start.
 
-### Install pip
-[Install Anaconda](https://docs.anaconda.com/anaconda/install/). If installing on Windows, open Anaconda prompt after installation and run
-
 ### Clone this repository wherever you want to have it
 Access the folder/directory of your choice and clone (make a local copy) of this repository on your machine by running
 
