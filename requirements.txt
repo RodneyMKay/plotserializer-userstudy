@@ -1,0 +1,9 @@
+python_version > "3.9"
+numpy
+pandas
+matplotlib
+sphinx # documentation
+flake8 # linting
+black # autoformatting
+mypy # typechecking
+

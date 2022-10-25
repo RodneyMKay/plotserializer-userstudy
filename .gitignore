@@ -1,0 +1,6 @@
+*
+
+!*.py
+!.vscode
+!.gitignore
+!requirements.txt
