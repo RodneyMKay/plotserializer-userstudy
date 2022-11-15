@@ -9,12 +9,12 @@
     "python.linting.flake8Args": [
         "--filename=*.py",
         "--exclude=env/",
-        "--max-line-length=80",
+        "--max-line-length=120",
         "--docstring-convention=google"
     ],
 
     "[python]": {
-        "editor.rulers": [80],
+        "editor.rulers": [120],
         "editor.renderWhitespace": "none",
         "editor.formatOnSave": false,
         "editor.codeActionsOnSave": {
