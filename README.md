@@ -16,9 +16,8 @@ Note that there are hundreds of other extensions that can support you in various
 ### Clone this repository wherever you want to have it
 Access the folder/directory of your choice and clone (make a local copy) of this repository on your machine by running
 
-:warning: ADJUST THIS LINK
 ```bash
-git clone https://git.rwth-aachen.de/fst-tuda/projects/emergencity/project-name.git
+git clone https://git.rwth-aachen.de/fst-tuda/projects/rdm/plot-serializer.git
 ```
 
 If the authentication fails, you might need to add the ssh key beforehands - this will be the case if you want to access GitLab from a new machine.
