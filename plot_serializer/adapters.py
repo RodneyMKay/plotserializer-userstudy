@@ -1,14 +1,16 @@
 from typing import Union
 
-class Plot:
 
+class Plot:
     def __init__(self) -> None:
-        #self._axes = None
+        # self._axes = None
         pass
+
 
 class Axis:
     def __init__(self) -> None:
         pass
+
 
 class PlottedElement:
     def __init__(self) -> None:
@@ -51,8 +53,8 @@ class PlottedElement:
             raise TypeError("label must be a string.")
         self._label = label
 
-class MatplotlibAdapter(Plot):
 
+class MatplotlibAdapter(Plot):
     def __init__(self, fig) -> None:
         super().__init__()
         self.axes = self.get_axes(fig)
@@ -65,7 +67,6 @@ class MatplotlibAdapter(Plot):
             a.plotted_elements = self.get_plotted_elements(axis)
             axes.append(a)
         return axes
-
 
     def get_plotted_elements(self, axis):
         lines = self.get_lines(axis)
@@ -83,4 +84,3 @@ class MatplotlibAdapter(Plot):
                 pe.type = type(line)
                 lines.append(pe)
         return lines
-
