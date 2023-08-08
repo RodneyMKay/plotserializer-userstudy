@@ -1,7 +1,10 @@
 
 class Plot:
     def __init__(self) -> None:
+        self._id = None
         self._axes = None
+        self._title = None
+        self._caption = None
         pass
 
 
