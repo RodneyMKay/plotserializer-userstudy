@@ -16,6 +16,17 @@ class Plot():
     def axes(self, axes):
         self._axes = axes
 
+    @property
+    def id(self):
+        return self._id
+
+    @id.setter
+    def id(self, id):
+        if type(id) is str:
+            self._id = id
+        else:
+            raise TypeError("id must be a string.")
+
 class Axis():
     def __init__(self) -> None:
         self._plotted_elements = None

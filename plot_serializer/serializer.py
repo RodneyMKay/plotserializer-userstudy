@@ -1,6 +1,7 @@
 import matplotlib
 import json
 import inspect
+from collections import OrderedDict
 from plot_serializer.adapters import Plot, MatplotlibAdapter
 
 
@@ -31,7 +32,17 @@ class Serializer:
         return converted_plot
 
     def to_json(self) -> str:
-        return json.dumps(self.plot, default=lambda o: self._getattrorprop(o))
+        d = json.loads(json.dumps(self.plot, default=lambda o: self._getattrorprop(o)))
+        od = OrderedDict()
+        header = ["id"]
+        for k in header:
+            od[k] = d[k]
+        for k in set(d.keys()) - set(header):
+            od[k] = d[k]
+        return json.dumps(od)
+
+    def add_id(self, id) -> None:
+        self.plot.id = id
 
     def _getattrorprop(self, o):
         d = dict(
