@@ -28,6 +28,6 @@ class MatplotlibAdapter(Plot):
                 pe.xdata = list(line.get_xdata())
                 pe.ydata = list(line.get_ydata())
                 pe.label = line.get_label()
-                pe.type = type(line)
+                pe.type = str(type(line))
                 lines.append(pe)
         return lines

@@ -1,5 +1,6 @@
 import matplotlib
 import json
+import inspect
 from plot_serializer.adapters import Plot, MatplotlibAdapter
 
 
@@ -30,5 +31,14 @@ class Serializer:
         return converted_plot
 
     def to_json(self) -> str:
-        return json.dumps(self.plot, default=lambda o: getattr(o, "__dict__", str(o)))
+        return json.dumps(self.plot, default=lambda o: self._getattrorprop(o))
 
+    def _getattrorprop(self, o):
+        d = dict(
+            (k, v)
+            for k, v in inspect.getmembers(o)
+            if not k.startswith("_")
+            and not inspect.ismethod(v)
+            and not inspect.isfunction(v)
+        )
+        return d

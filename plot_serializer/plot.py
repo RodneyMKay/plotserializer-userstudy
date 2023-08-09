@@ -1,5 +1,6 @@
 
-class Plot:
+class Plot():
+    # __slots__ = ["_id", "_axes", "_title", "_caption"]
     def __init__(self) -> None:
         self._id = None
         self._axes = None
@@ -7,8 +8,15 @@ class Plot:
         self._caption = None
         pass
 
+    @property
+    def axes(self):
+        return self._axes
 
-class Axis:
+    @axes.setter
+    def axes(self, axes):
+        self._axes = axes
+
+class Axis():
     def __init__(self) -> None:
         self._plotted_elements = None
         self._title = None
@@ -21,7 +29,7 @@ class Axis:
         pass
 
 
-class PlottedElement:
+class PlottedElement():
     def __init__(self) -> None:
         self._xdata = None
         self._ydata = None
