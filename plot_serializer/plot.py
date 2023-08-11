@@ -1,5 +1,4 @@
-
-class Plot():
+class Plot:
     # __slots__ = ["_id", "_axes", "_title", "_caption"]
     def __init__(self) -> None:
         self._id = None
@@ -27,7 +26,8 @@ class Plot():
         else:
             raise TypeError("id must be a string.")
 
-class Axis():
+
+class Axis:
     def __init__(self) -> None:
         self._plotted_elements = None
         self._title = None
@@ -40,7 +40,7 @@ class Axis():
         pass
 
 
-class PlottedElement():
+class PlottedElement:
     def __init__(self) -> None:
         self._xdata = None
         self._ydata = None

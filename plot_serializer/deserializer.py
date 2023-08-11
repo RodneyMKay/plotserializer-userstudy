@@ -10,7 +10,7 @@ class Deserializer:
         pass
 
     def from_json(self, filename):
-        with open(filename, 'r') as openfile:
+        with open(filename, "r") as openfile:
             # Reading from json file
             d = json.load(openfile)
         p = Plot()
