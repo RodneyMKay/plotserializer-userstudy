@@ -31,10 +31,9 @@ class Serializer:
             )
         return converted_plot
 
-    def to_json(self) -> str:
+    def to_json(self, header=["id"]) -> str:
         d = json.loads(json.dumps(self.plot, default=lambda o: self._getattrorprop(o)))
         od = OrderedDict()
-        header = ["id"]
         for k in header:
             od[k] = d[k]
         for k in set(d.keys()) - set(header):
