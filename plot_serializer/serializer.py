@@ -44,6 +44,10 @@ class Serializer:
     def add_id(self, id) -> None:
         self.plot.id = id
 
+    def add_custom_metadata(self, metadata_dict: dict) -> None:
+        for k, v in metadata_dict.items():
+            setattr(self.plot, k, v)
+
     def _getattrorprop(self, o):
         d = dict(
             (k, v)
