@@ -53,7 +53,7 @@ class PlottedElement:
 
     @xdata.setter
     def xdata(self, data):
-        if type(data) != list:
+        if type(data) is not list:
             raise TypeError("xdata must be a list.")
         if self.ydata is not None and len(data) != len(self.ydata):
             raise RuntimeError("Length of xdata and ydata differs.")
@@ -65,7 +65,7 @@ class PlottedElement:
 
     @ydata.setter
     def ydata(self, data):
-        if type(data) != list:
+        if type(data) is not list:
             raise TypeError("ydata must be a list.")
         if self.xdata is not None and len(data) != len(self.xdata):
             raise RuntimeError("Length of xdata and ydata differs.")
@@ -77,6 +77,6 @@ class PlottedElement:
 
     @label.setter
     def label(self, label):
-        if type(label) != str:
+        if type(label) is not str:
             raise TypeError("label must be a string.")
         self._label = label
