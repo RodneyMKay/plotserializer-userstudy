@@ -45,3 +45,6 @@ lint:
 #   script:
 #     - pytest
 
+doc:
+  script:
+    - make html

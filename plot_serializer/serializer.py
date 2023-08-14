@@ -32,6 +32,14 @@ class Serializer:
         return converted_plot
 
     def to_json(self, header=["id"]) -> str:
+        """Exports plot to json.
+
+        Args:
+            header (list, optional): list of keys to appear on top of the json string. Defaults to ["id"].
+
+        Returns:
+            str: json string
+        """
         d = json.loads(json.dumps(self.plot, default=lambda o: self._getattrorprop(o)))
         od = OrderedDict()
         for k in header:

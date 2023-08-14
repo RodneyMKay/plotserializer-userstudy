@@ -1,8 +1,12 @@
 *
 
 !*.py
+!*.rst
 !.vscode
 !.gitignore
 !requirements.txt
 !tests/
 !plot_serializer/
+!doc/
+!make.bat
+!Makefile
