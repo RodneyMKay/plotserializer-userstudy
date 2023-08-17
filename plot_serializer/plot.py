@@ -5,6 +5,7 @@ class Plot:
         self._axes = None
         self._title = None
         self._caption = None
+        self._dataset = None
         pass
 
     @property
@@ -80,3 +81,10 @@ class PlottedElement:
         if type(label) is not str:
             raise TypeError("label must be a string.")
         self._label = label
+
+
+class Dataset:
+    def __init__(self) -> None:
+        self._URL = None
+        self._file_name = None
+        pass

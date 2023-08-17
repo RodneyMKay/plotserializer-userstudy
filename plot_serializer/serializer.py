@@ -6,9 +6,10 @@ from plot_serializer.adapters import Plot, MatplotlibAdapter
 
 
 class Serializer:
-    def __init__(self, p) -> None:
+    def __init__(self, p=None) -> None:
         self._plot = None
-        self.plot = self.convert_plot(p)
+        if p is not None:
+            self.load_plot(p)
         pass
 
     @property
@@ -22,14 +23,13 @@ class Serializer:
         else:
             self._plot = plot
 
-    def convert_plot(self, p) -> Plot:
+    def load_plot(self, p) -> None:
         if isinstance(p, matplotlib.pyplot.Figure):
-            converted_plot = MatplotlibAdapter(p)
+            self.plot = MatplotlibAdapter(p)
         else:
             raise NotImplementedError(
                 "Only matplotlib is implemented. Make sure you submit a matplotlib.pyplot.Figure object."
             )
-        return converted_plot
 
     def to_json(self, header=["id"]) -> str:
         """Exports plot to json.
