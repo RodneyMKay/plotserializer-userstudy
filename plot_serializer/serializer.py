@@ -48,12 +48,16 @@ class Serializer:
             od[k] = d[k]
         return json.dumps(od)
 
-    def add_id(self, id) -> None:
-        self.plot.id = id
+    def add_plot_metadata(self, title=None, id=None, caption=None):
+        pass
 
-    def add_custom_metadata(self, metadata_dict: dict) -> None:
+    def add_axis_metadata(self, axis, xunit, yunit):
+        pass
+
+    def add_custom_metadata(self, metadata_dict: dict, obj) -> None:
         for k, v in metadata_dict.items():
-            setattr(self.plot, k, v)
+            setattr(obj, k, v)
+        return obj
 
     def _getattrorprop(self, o):
         d = dict(
