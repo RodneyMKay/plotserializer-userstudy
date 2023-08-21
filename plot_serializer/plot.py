@@ -30,6 +30,10 @@ class Plot:
         else:
             raise TypeError("id must be a string.")
 
+    def add_custom_metadata(self, metadata_dict: dict) -> None:
+        for k, v in metadata_dict.items():
+            setattr(self.plot, k, v)
+
 
 class Axis:
     def __init__(self) -> None:
