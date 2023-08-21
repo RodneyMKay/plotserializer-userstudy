@@ -55,9 +55,18 @@ class Serializer:
         pass
 
     def add_custom_metadata(self, metadata_dict: dict, obj) -> None:
-        for k, v in metadata_dict.items():
-            setattr(obj, k, v)
-        return obj
+        if obj in [
+            self.plot,
+            *self.plot.axes,
+            *[p for a in self.plot.axes for p in a.plotted_elements],
+        ]:
+            for k, v in metadata_dict.items():
+                setattr(obj, k, v)
+            return obj
+        else:
+            raise ValueError(
+                "obj must be the plot or its attributes assigned to the Serializer function"
+            )
 
     def _getattrorprop(self, o):
         d = dict(
