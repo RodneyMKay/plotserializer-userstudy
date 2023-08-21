@@ -1,14 +1,12 @@
 from rdflib import Graph
 
 
-def unit_in_ontology(unit_name, ontology_url="default"):
-    if ontology_url == "default":
-        ontology_url = (
-            "https://raw.githubusercontent.com/HajoRijgersberg/OM/master/om-2.0.rdf"
-        )
+def unit_in_ontology(unit_name, ontology_path="default"):
+    if ontology_path == "default":
+        ontology_path = "./plot_serializer/ontologies/om-2.0.rdf"
     g = Graph()
 
-    g.parse(ontology_url, format="xml")
+    g.parse(ontology_path, format="xml")
 
     query = (
         """

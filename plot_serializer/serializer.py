@@ -1,15 +1,19 @@
 import matplotlib
 import json
 import inspect
+import warnings
 from collections import OrderedDict
 from plot_serializer.adapters import Plot, MatplotlibAdapter
+from plot_serializer.exceptions import OntologyWarning
 
 
 class Serializer:
-    def __init__(self, p=None) -> None:
+    def __init__(self, p=None, suppress_ontology_warnings=False) -> None:
         self._plot = None
         if p is not None:
             self.load_plot(p)
+        if suppress_ontology_warnings is True:
+            warnings.filterwarnings(action="ignore", category=OntologyWarning)
         pass
 
     @property
