@@ -2,6 +2,7 @@
 
 !*.py
 !*.rst
+!*.rdf
 !.vscode
 !.gitignore
 !requirements.txt
@@ -11,3 +12,4 @@
 !make.bat
 !Makefile
 !pyproject.toml
+!plot_serializer/ontologies/

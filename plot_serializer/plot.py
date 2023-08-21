@@ -1,3 +1,5 @@
+from warnings import warn
+from plot_serializer.exceptions import OntologyWarning
 from plot_serializer.utils import unit_in_ontology
 
 
@@ -36,7 +38,7 @@ class Plot:
 
 
 class Axis:
-    def __init__(self) -> None:
+    def __init__(self, unit_ontology="default") -> None:
         self._plotted_elements = None
         self._title = None
         self._xlabel = None
@@ -45,6 +47,7 @@ class Axis:
         self._yquantity = None
         self._xunit = None
         self._yunit = None
+        self.unit_ontology = unit_ontology
         pass
 
     @property
@@ -115,8 +118,11 @@ class Axis:
     def xunit(self, xunit):
         if not isinstance(xunit, str):
             raise TypeError("xunit must be a string.")
-        if not unit_in_ontology(xunit):
-            raise Warning("Unit {xunit} is not in the OM ontology.")
+        if not unit_in_ontology(xunit, self.unit_ontology):
+            warn(
+                "Unit {} is not in the selected ontology.".format(xunit),
+                OntologyWarning,
+            )
         self._xunit = xunit
 
     @property
@@ -127,6 +133,11 @@ class Axis:
     def yunit(self, yunit):
         if not isinstance(yunit, str):
             raise TypeError("yunit must be a string.")
+        if not unit_in_ontology(yunit, self.unit_ontology):
+            warn(
+                "Unit {} is not in the selected ontology.".format(yunit),
+                OntologyWarning,
+            )
         self._yunit = yunit
 
 
