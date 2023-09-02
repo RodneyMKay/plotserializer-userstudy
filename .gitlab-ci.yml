@@ -39,11 +39,12 @@ lint:
     - pwd
     - ls -lh
     - flake8 . --filename=*.py --exclude=venv/ --max-line-length=120
-# unit-test:
-#   tags:
-#   - env:docker
-#   script:
-#     - pytest
+
+unit-test:
+  tags:
+    - env:docker
+  script:
+    - pytest tests/
 
 doc:
   script:

@@ -1,4 +1,4 @@
-python_version > "3.9"
+python_version >= "3.9"
 numpy
 pandas
 matplotlib
@@ -9,4 +9,5 @@ flake8 # linting
 black # autoformatting
 mypy # typechecking
 pytest # unit testing
+rdflib
 
