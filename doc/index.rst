@@ -6,7 +6,17 @@
 Welcome to Plot Serializer's documentation!
 ===========================================
 
+Plot Serializer is a tool for creating easily readable JSON files for your scientific diagrams.
+It increases the transparency of scientific publications by helping you share data from your diagrams - with the option of providing custom metadata.
+It's simple and hassle-free!
+
+Note: Plot Serializer is currently under development and its functionality is limited to 2D line plots. More will come soon!
+
 .. toctree::
+   :maxdepth: 1
+
+   Overview
+   Getting Started
    autoapi/index
 
 
