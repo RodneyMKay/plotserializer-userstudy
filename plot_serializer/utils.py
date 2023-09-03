@@ -1,9 +1,11 @@
+from importlib import resources as impresources
+from plot_serializer import ontologies
 from rdflib import Graph
 
 
 def unit_in_ontology(unit_name, ontology_path="default"):
     if ontology_path == "default":
-        ontology_path = "./plot_serializer/ontologies/om-2.0.rdf"
+        ontology_path = impresources.files(ontologies) / "om-2.0.rdf"
     g = Graph()
 
     g.parse(ontology_path, format="xml")
