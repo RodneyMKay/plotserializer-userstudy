@@ -123,11 +123,11 @@ class Axis:
     def xunit(self, xunit):
         if (not isinstance(xunit, str)) and (xunit is not None):
             raise TypeError("xunit must be a string or None.")
-        if not unit_in_ontology(xunit, self.unit_ontology):
-            warn(
-                "Unit {} is not in the selected ontology.".format(xunit),
-                OntologyWarning,
-            )
+        # if not unit_in_ontology(xunit, self.unit_ontology):
+        #     warn(
+        #         "Unit {} is not in the selected ontology.".format(xunit),
+        #         OntologyWarning,
+        #     )
         self._xunit = xunit
 
     @property
@@ -138,11 +138,11 @@ class Axis:
     def yunit(self, yunit):
         if (not isinstance(yunit, str)) and (yunit is not None):
             raise TypeError("yunit must be a string or None.")
-        if not unit_in_ontology(yunit, self.unit_ontology):
-            warn(
-                "Unit {} is not in the selected ontology.".format(yunit),
-                OntologyWarning,
-            )
+        # if not unit_in_ontology(yunit, self.unit_ontology):
+        #     warn(
+        #         "Unit {} is not in the selected ontology.".format(yunit),
+        #         OntologyWarning,
+        #     )
         self._yunit = yunit
 
 
