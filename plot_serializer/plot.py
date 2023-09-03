@@ -32,6 +32,11 @@ class Plot:
         else:
             raise TypeError("id must be a string.")
 
+    def add_plot_metadata(self, title, id, caption):
+        self._id = id
+        self._title = title
+        self._caption = caption
+
     def add_custom_metadata(self, metadata_dict: dict) -> None:
         for k, v in metadata_dict.items():
             setattr(self.plot, k, v)
@@ -96,8 +101,8 @@ class Axis:
 
     @xquantity.setter
     def xquantity(self, xquantity):
-        if not isinstance(xquantity, str):
-            raise TypeError("xquantity must be a string.")
+        if (not isinstance(xquantity, str)) and (xquantity is not None):
+            raise TypeError("xquantity must be a string or None.")
         self._xquantity = xquantity
 
     @property
@@ -106,8 +111,8 @@ class Axis:
 
     @yquantity.setter
     def yquantity(self, yquantity):
-        if not isinstance(yquantity, str):
-            raise TypeError("yquantity must be a string.")
+        if (not isinstance(yquantity, str)) and (yquantity is not None):
+            raise TypeError("yquantity must be a string or None.")
         self._yquantity = yquantity
 
     @property
@@ -116,8 +121,8 @@ class Axis:
 
     @xunit.setter
     def xunit(self, xunit):
-        if not isinstance(xunit, str):
-            raise TypeError("xunit must be a string.")
+        if (not isinstance(xunit, str)) and (xunit is not None):
+            raise TypeError("xunit must be a string or None.")
         if not unit_in_ontology(xunit, self.unit_ontology):
             warn(
                 "Unit {} is not in the selected ontology.".format(xunit),
@@ -131,8 +136,8 @@ class Axis:
 
     @yunit.setter
     def yunit(self, yunit):
-        if not isinstance(yunit, str):
-            raise TypeError("yunit must be a string.")
+        if (not isinstance(yunit, str)) and (yunit is not None):
+            raise TypeError("yunit must be a string or None.")
         if not unit_in_ontology(yunit, self.unit_ontology):
             warn(
                 "Unit {} is not in the selected ontology.".format(yunit),
@@ -147,6 +152,7 @@ class PlottedElement:
         self._ydata = None
         self._label = None
         self._type = None
+        self._color = None
 
     @property
     def xdata(self):
@@ -181,6 +187,16 @@ class PlottedElement:
         if not isinstance(label, str):
             raise TypeError("label must be a string.")
         self._label = label
+
+    @property
+    def color(self):
+        return self._color
+
+    @color.setter
+    def color(self, color):
+        if not isinstance(color, str):
+            raise TypeError("color must be a string")
+        self._color = color
 
 
 class Dataset:

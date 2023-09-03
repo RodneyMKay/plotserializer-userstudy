@@ -10,6 +10,7 @@ from plot_serializer.exceptions import OntologyWarning
 class Serializer:
     def __init__(self, p=None, suppress_ontology_warnings=False) -> None:
         self._plot = None
+        self._axis = None
         if p is not None:
             self.load_plot(p)
         if suppress_ontology_warnings is True:
@@ -27,9 +28,18 @@ class Serializer:
         else:
             self._plot = plot
 
+    @property
+    def axis(self):
+        return self._axis
+
+    @axis.setter
+    def axis(self, axis):
+        self._axis = axis
+
     def load_plot(self, p) -> None:
         if isinstance(p, matplotlib.pyplot.Figure):
             self.plot = MatplotlibAdapter(p)
+            self.axis = MatplotlibAdapter(p).get_axes(p)
         else:
             raise NotImplementedError(
                 "Only matplotlib is implemented. Make sure you submit a matplotlib.pyplot.Figure object."
@@ -52,13 +62,69 @@ class Serializer:
             od[k] = d[k]
         return json.dumps(od)
 
-    def add_plot_metadata(self, title=None, id=None, caption=None):
-        pass
+    def add_plot_metadata(self, id=None, title=None, caption=None):
+        """Adds plot metadata to the plot object.
 
-    def add_axis_metadata(self, axis, xunit, yunit):
-        pass
+        Args:
+            id (int, optional): the id of plot. Defaults to None.
+            title (str, optional): the title of plot. Defaults to None.
+            caption (str, optional): the caption of plot. Defaults to None.
+        """
+        self.plot.id = id
+        self.plot.title = title
+        self.plot.caption = caption
+
+    def add_axis_metadata(
+        self,
+        axis_index,
+        title,
+        xlabel,
+        ylabel,
+        xunit=None,
+        yunit=None,
+        xquantity=None,
+        yquantity=None,
+    ):
+        """Adds axis metadata to the axis selected by index
+
+        Args:
+            axis_index (int): the index of subplot
+            title (str): the title of subplot
+            xlabel (str): the label of x-axis
+            ylabel (str): the label of y-axis
+            xunit (str, optional): the unit of x-axis. Defaults to None.
+            yunit (str, optional): the unit of y-axis. Defaults to None.
+            xquantity (str, optional): the quantity of x-axis. Defaults to None.
+            yquantity (str, optional): the quantity of y-axis. Defaults to None.
+        """
+        # TODO: überprüfen die anzhal des subplots
+        self.plot.axes[axis_index].title = title
+        self.plot.axes[axis_index].xlabel = xlabel
+        self.plot.axes[axis_index].ylabel = ylabel
+        self.plot.axes[axis_index].xunit = xunit
+        self.plot.axes[axis_index].yunit = yunit
+        self.plot.axes[axis_index].xquantity = xquantity
+        self.plot.axes[axis_index].yquantity = yquantity
 
     def add_custom_metadata(self, metadata_dict: dict, obj) -> None:
+        """Adds custom metadata to a specified object.
+
+        Args:
+            metadata_dict (dict): dictionary that contains metadata to add
+            obj (plot_serializer.plot.Plot,
+                 plot_serializer.plot.Axis,
+                 plot_serializer.plot.PlottedElement): Plot, Axis, or PlottedElement
+                    assigned to Serializer
+
+        Raises:
+            ValueError: obj must be the plot or its attributes assigned to the
+                Serializer function
+
+        Returns:
+            plot_serializer.plot.Plot,
+            plot_serializer.plot.Axis,
+            plot_serializer.plot.PlottedElement: obj including metadata
+        """
         if obj in [
             self.plot,
             *self.plot.axes,
