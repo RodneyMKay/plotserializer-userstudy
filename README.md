@@ -2,28 +2,23 @@
 
 [[_TOC_]]
 
-## Common Infrastructure
-### Install git
-Install git on your operating system following [these instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+## Installation
+Install Plot Serializer with pip:
 
-### Install VS Code
-[Install VS Code](https://code.visualstudio.com/) on the operating system of your choice.
-
-After the installation is finished, you can install extensions of your choice. This project contains extension recommendations in the `.vscode/extensions.json` file.
-
-Note that there are hundreds of other extensions that can support you in various tasks - it is worth looking for tips and tricks online. We leave this up to you and name only the most basic ones for the start.
-
-### Clone this repository wherever you want to have it
-Access the folder/directory of your choice and clone (make a local copy) of this repository on your machine by running
-
-```bash
-git clone https://git.rwth-aachen.de/fst-tuda/projects/rdm/plot-serializer.git
+```cmd
+pip install plot-serializer
 ```
 
-If the authentication fails, you might need to add the ssh key beforehands - this will be the case if you want to access GitLab from a new machine.
+## Contributing
+Clone this repository with
+
+```cmd
+git clone git@git.rwth-aachen.de:rdm-tools/plot-serializer.git
+```
 
 
-### Create a virtual environment to get the required packages
+
+### Creating the virtual environment
 On Windows, run
 
 ```cmd
@@ -54,27 +49,15 @@ Update the `requirements.txt` file when you install new packages.
 
 For more detailed instructions, check https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/.
 
-# Writing Good Code
-
-## Language Rules
-
 ### Linting
-This project uses the `flake8` linter. Linting is a static code analysis for finding programming errors, bugs, stylistic errors and suspicious constructs that do not conform with a standard - in case of flake8, with the standard [PEP8](https://peps.python.org/pep-0008/).
+This project uses the `flake8` linter and the `black` autoformatter.
 
-`flake8` will inform you about pep8 errors upon saving directly in the editor by underlining the relevant parts of code.
-
-### Autoformatting
-This project uses the `black` autoformatter and formats your code on save. Autoformatted code will look the same regardless of who wrote it and regardless of the project, so that you can focus more on the content.
-
-
-## Style Rules
 ### Documentation
 Documentation is an essential part of writing code.
 
 :warning: All public functions, methods, classes and modules must be properly documented with docstrings.
 
-To generate a docstring, right-click on a class, function, method or module and click on `Generate Docstring`.
-This will generate a `google`-style docstring template that you have to fill out. An example for a good docstring:
+This project uses `google`-style docstrings. An example for a good docstring:
 
 ```python
 def find_largest_distance(point, polygon):

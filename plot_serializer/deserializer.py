@@ -10,6 +10,14 @@ class Deserializer:
         pass
 
     def from_json(self, filename):
+        """Creates a Plot object out of a JSON file created with Serializer.
+
+        Args:
+            filename (str): path to the JSON file
+
+        Returns:
+            plot_serializer.Plot: Plot object from the JSON file
+        """
         with open(filename, "r") as openfile:
             # Reading from json file
             d = json.load(openfile)
@@ -32,6 +40,14 @@ class Deserializer:
         return o
 
     def json_to_matplotlib(self, json_file):
+        """Converts the Plot objects from JSON to matplotlib.pyplot.
+
+        Args:
+            json_file (str): path to the JSON file
+
+        Returns:
+            matplotlib.pyplot.Figure: matplotlib.pyplot.Figure created from the JSON file
+        """
         self.plot = self.from_json(json_file)
         fig = plt.figure()
         for axis in self.plot.axes:

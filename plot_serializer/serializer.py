@@ -111,18 +111,17 @@ class Serializer:
 
         Args:
             metadata_dict (dict): dictionary that contains metadata to add
-            obj (plot_serializer.plot.Plot,
-                 plot_serializer.plot.Axis,
-                 plot_serializer.plot.Trace): Plot, Axis, or Trace
-                    assigned to Serializer
+            obj (plot_serializer.plot.Plot | plot_serializer.plot.Axis |
+                plot_serializer.plot.Trace): Plot, Axis, or Trace
+                assigned to Serializer
 
         Raises:
             ValueError: obj must be the plot or its attributes assigned to the
                 Serializer function
 
         Returns:
-            plot_serializer.plot.Plot,
-            plot_serializer.plot.Axis,
+            plot_serializer.plot.Plot |
+            plot_serializer.plot.Axis |
             plot_serializer.plot.Trace: obj including metadata
         """
         if obj in [
