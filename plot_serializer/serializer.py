@@ -113,7 +113,7 @@ class Serializer:
             metadata_dict (dict): dictionary that contains metadata to add
             obj (plot_serializer.plot.Plot,
                  plot_serializer.plot.Axis,
-                 plot_serializer.plot.PlottedElement): Plot, Axis, or PlottedElement
+                 plot_serializer.plot.Trace): Plot, Axis, or Trace
                     assigned to Serializer
 
         Raises:
@@ -123,12 +123,12 @@ class Serializer:
         Returns:
             plot_serializer.plot.Plot,
             plot_serializer.plot.Axis,
-            plot_serializer.plot.PlottedElement: obj including metadata
+            plot_serializer.plot.Trace: obj including metadata
         """
         if obj in [
             self.plot,
             *self.plot.axes,
-            *[p for a in self.plot.axes for p in a.plotted_elements],
+            *[t for a in self.plot.axes for t in a.traces],
         ]:
             for k, v in metadata_dict.items():
                 setattr(obj, k, v)
