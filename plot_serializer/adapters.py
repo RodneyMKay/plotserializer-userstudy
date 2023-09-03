@@ -3,7 +3,7 @@
 
 """
 
-from plot_serializer.plot import Plot, Axis, PlottedElement
+from plot_serializer.plot import Plot, Axis, Trace
 
 
 class MatplotlibAdapter(Plot):
@@ -16,11 +16,11 @@ class MatplotlibAdapter(Plot):
         axes = []
         for axis in fig.axes:
             a = Axis()
-            a.plotted_elements = self.get_plotted_elements(axis)
+            a.traces = self.get_traces(axis)
             axes.append(a)
         return axes
 
-    def get_plotted_elements(self, axis):
+    def get_traces(self, axis):
         lines = self.get_lines(axis)
         # collections = self.get_collections()
         return lines
@@ -29,7 +29,7 @@ class MatplotlibAdapter(Plot):
         lines = []
         if len(axis.lines) > 0:
             for line in axis.lines:
-                pe = PlottedElement()
+                pe = Trace()
                 pe.xdata = list(line.get_xdata())
                 pe.ydata = list(line.get_ydata())
                 pe.label = line.get_label()

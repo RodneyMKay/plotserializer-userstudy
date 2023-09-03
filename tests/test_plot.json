@@ -2,7 +2,7 @@
     "id": "id:ad0cca21",
     "axes": [
         {
-            "plotted_elements": [
+            "traces": [
                 {
                     "label": "Blue signal",
                     "type": "<class 'matplotlib.lines.Line2D'>",

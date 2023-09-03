@@ -1,7 +1,7 @@
 import json
 import matplotlib.pyplot as plt
 
-from plot_serializer.plot import Plot, Axis, PlottedElement
+from plot_serializer.plot import Plot, Axis, Trace
 
 
 class Deserializer:
@@ -19,10 +19,10 @@ class Deserializer:
             axis = Axis()
             axis.xlabel = a["xlabel"]
             axis.ylabel = a["ylabel"]
-            axis.plotted_elements = []
-            for pe in a["plotted_elements"]:
-                plotted_element = PlottedElement()
-                axis.plotted_elements.append(self.dict_to_object(pe, plotted_element))
+            axis.traces = []
+            for t in a["traces"]:
+                plotted_element = Trace()
+                axis.traces.append(self.dict_to_object(t, plotted_element))
             p.axes.append(axis)
         return p
 
@@ -38,6 +38,6 @@ class Deserializer:
             ax = fig.add_subplot()
             ax.set_xlabel(axis.xlabel)
             ax.set_ylabel(axis.ylabel)
-            for pe in axis.plotted_elements:
-                ax.plot(pe.xdata, pe.ydata, label=pe.label, color=pe.color)
+            for t in axis.traces:
+                ax.plot(t.xdata, t.ydata, label=t.label, color=t.color)
         return fig

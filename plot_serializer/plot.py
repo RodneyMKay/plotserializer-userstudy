@@ -44,7 +44,7 @@ class Plot:
 
 class Axis:
     def __init__(self, unit_ontology="default") -> None:
-        self._plotted_elements = None
+        self._traces = None
         self._title = None
         self._xlabel = None
         self._ylabel = None
@@ -56,14 +56,14 @@ class Axis:
         pass
 
     @property
-    def plotted_elements(self):
-        return self._plotted_elements
+    def traces(self):
+        return self._traces
 
-    @plotted_elements.setter
-    def plotted_elements(self, pe):
-        if not all(isinstance(p, PlottedElement) for p in pe):
-            raise TypeError("Must be a list of instances of PlottedElement.")
-        self._plotted_elements = pe
+    @traces.setter
+    def traces(self, ts):
+        if not all(isinstance(p, Trace) for p in ts):
+            raise TypeError("Must be a list of instances of Trace.")
+        self._traces = ts
 
     @property
     def title(self):
@@ -146,7 +146,7 @@ class Axis:
         self._yunit = yunit
 
 
-class PlottedElement:
+class Trace:
     def __init__(self) -> None:
         self._xdata = None
         self._ydata = None
