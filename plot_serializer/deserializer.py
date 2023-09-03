@@ -17,13 +17,14 @@ class Deserializer:
         p.axes = []
         for a in d["axes"]:
             axis = Axis()
+            axis.xlabel = a["xlabel"]
+            axis.ylabel = a["ylabel"]
             axis.plotted_elements = []
             for pe in a["plotted_elements"]:
                 plotted_element = PlottedElement()
                 axis.plotted_elements.append(self.dict_to_object(pe, plotted_element))
             p.axes.append(axis)
         return p
-        pass
 
     def dict_to_object(self, d, o):
         for key, value in d.items():
@@ -35,6 +36,8 @@ class Deserializer:
         fig = plt.figure()
         for axis in self.plot.axes:
             ax = fig.add_subplot()
+            ax.set_xlabel(axis.xlabel)
+            ax.set_ylabel(axis.ylabel)
             for pe in axis.plotted_elements:
-                ax.plot(pe.xdata, pe.ydata, label=pe.label)
+                ax.plot(pe.xdata, pe.ydata, label=pe.label, color=pe.color)
         return fig

@@ -6,6 +6,7 @@
                 {
                     "label": "Blue signal",
                     "type": "<class 'matplotlib.lines.Line2D'>",
+                    "color": "C0",
                     "xdata": [
                         0.5,
                         0.5303030303030303,
@@ -214,6 +215,7 @@
                 {
                     "label": "Orange signal",
                     "type": "<class 'matplotlib.lines.Line2D'>",
+                    "color": "C1",
                     "xdata": [
                         0.5,
                         0.5303030303030303,
