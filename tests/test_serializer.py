@@ -3,7 +3,6 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 import pytest
-from plot_serializer.exceptions import OntologyWarning
 
 from plot_serializer.serializer import Serializer
 
@@ -53,8 +52,7 @@ def test_to_json():
     benchmark_file = open("tests/test_plot.json")
     benchmark_dict = json.load(benchmark_file)
 
-    with pytest.warns(OntologyWarning):
-        dict_from_serialized = json.loads(serialize_plot())
+    dict_from_serialized = json.loads(serialize_plot())
 
     np.testing.assert_array_equal(
         np.array(benchmark_dict.keys()),
@@ -69,8 +67,7 @@ def test_to_json_linux():
     benchmark_file = open("tests/test_plot.json")
     benchmark_dict = json.load(benchmark_file)
 
-    with pytest.warns(OntologyWarning):
-        dict_from_serialized = json.loads(serialize_plot())
+    dict_from_serialized = json.loads(serialize_plot())
 
     np.testing.assert_array_equal(
         np.array(benchmark_dict.keys()),

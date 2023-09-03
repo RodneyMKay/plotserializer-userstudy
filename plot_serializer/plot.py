@@ -1,8 +1,3 @@
-from warnings import warn
-from plot_serializer.exceptions import OntologyWarning
-from plot_serializer.utils import unit_in_ontology
-
-
 class Plot:
     # __slots__ = ["_id", "_axes", "_title", "_caption"]
     def __init__(self) -> None:
