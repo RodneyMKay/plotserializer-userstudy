@@ -25,8 +25,6 @@ class Deserializer:
         p.axes = []
         for a in d["axes"]:
             axis = Axis()
-            axis.xlabel = a["xlabel"]
-            axis.ylabel = a["ylabel"]
             axis.traces = []
             for t in a["traces"]:
                 plotted_element = Trace()
@@ -52,8 +50,6 @@ class Deserializer:
         fig = plt.figure()
         for axis in self.plot.axes:
             ax = fig.add_subplot()
-            ax.set_xlabel(axis.xlabel)
-            ax.set_ylabel(axis.ylabel)
             for t in axis.traces:
                 ax.plot(t.xdata, t.ydata, label=t.label, color=t.color)
         return fig
