@@ -9,6 +9,10 @@ Install Plot Serializer with pip:
 pip install plot-serializer
 ```
 
+## Documentation
+
+View Plot Serializer's documentation on [Read the Docs](https://plot-serializer.readthedocs.io/en/latest/)
+
 ## Contributing
 Clone this repository with
 
