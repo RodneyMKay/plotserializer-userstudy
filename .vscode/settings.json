@@ -3,7 +3,7 @@
         "editor.defaultFormatter": "ms-python.black-formatter",
         "editor.formatOnSave": true,
         "editor.rulers": [
-            80
+            120
         ],
         "editor.renderWhitespace": "trailing",
         "editor.codeActionsOnSave": {
