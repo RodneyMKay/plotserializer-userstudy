@@ -22,10 +22,10 @@ git checkout main
 git pull
 ```
 
-2. Create an issue that contains a description of the problem you are working on and create a local branch that you will use to resolve the issue. You can choose an arbitrary name - using a prefix that matches the issue name will relate the branch to the issue, such as `26-plotting` for an issue with the issue number `26`. using prefixes like `feature/` for new concepts and `fix/` when resolving issues makes the intention more clearly:
+2. Create an issue that contains a description of the problem you are working on and create a local branch that you will use to resolve the issue. You can choose an arbitrary name - using a prefix that matches the issue name will relate the branch to the issue, such as `26-plotting` for an issue with the issue number `26`.
 
 ```bash
-git checkout -b feature/add-location-property
+git checkout -b 26-plotting
 ```
 
 3. Make necessary changes in your working repository. Use `git status` to check changed files and `git diff` to inspect changes.
@@ -36,29 +36,29 @@ git checkout -b feature/add-location-property
 
 ```bash
 # Make sure to add the branch name from step 2:
-git push origin feature/add-location-property
+git push origin 26-plotting
 ```
 
 6. Create a merge request by selecting your branch as the _compare branch_ and the `main` branch as the _base branch_. After submitting the merge request, you can already select a suitable reviewer from the menu on the right side. If your merge request cannot be merged directly, it may be outdated w.r.t to the current `main` branch. In that case, you need to [rebase your feature branch](#rebase-your-feature-branch).
 
-7. If you want to start another merge request, make sure to return to the current main branch before:
+7. If you want to start working on a new issue, make sure to return to the current main branch before, sync it with the current status of the remote and then create a new branch:
 
 ```bash
 git checkout main
 git pull
 # Now you can create your next working branch
-git checkout -b feature/add-time-property
+git checkout -b 27-more-plotting
 ```
 
 ## Reviewing Changes
 
-If you want, you can assign your supervisor as a Reviewer to take a look at your changes and give you feedback to your code. You can discuss the changes directly in GitLab using comments either directly in the merge request or in the issue.
+If you want, you can assign your supervisor as a Reviewer to take a look at your changes and give you feedback to your code. You can discuss the changes directly on GitLab using comments either directly in the merge request or in the issue.
 
 ## Merge merge request
 
-Once the reviewer has given you positive feedback or you are sure you want to merge the changes as they are, you can merge your merge request in the GitLab web interface.
+Once the reviewer has given you positive feedback or you are sure you want to merge the changes as they are, you can complete your merge request in the GitLab web interface.
 
-After merging, you can delete the branch (there should be a button on the PR page where the Merge button was before).
+After merging, you can delete the branch (there should be a button on the MR page where the Merge button was before).
 It is safe to delete your branch, since all changes are now part of the `main` branch.
 
 
@@ -67,7 +67,6 @@ It is safe to delete your branch, since all changes are now part of the `main` b
 Some general tips & tricks in case of problems when working with git.
 
 ### Advanced: Rebase Your Feature Branch
-*Note: you will probably not need this during your thesis.*
 
 If GitLab shows that your merge request cannot be merged into the `main` branch, you usually made your changes based on an outdated version of the `main` branch, meaning somebody else merged their changes between your `git pull` and `git push`.
 In that case, you can _rebase_ your current branch on top of the current main branch:
@@ -75,12 +74,12 @@ In that case, you can _rebase_ your current branch on top of the current main br
 ```bash
 # Get the current changes from the main branch
 git fetch origin/main
-# Checkout the branch to rebase (replace feature-something by your working branch)
-git checkout feature/something
+# Checkout the branch to rebase (replace 28-test-branch by your working branch)
+git checkout 28-test-branch
 # Start rebase in interactive mode
 git rebase -i origin/main
-# Force-push your changes to the updated branch (again: replace the branch name with the actual name)
-git push --force origin feature-something
+# Force-push your changes to the updated branch (again: replace 28-test-branch with the actual name)
+git push --force origin 28-test-branch
 ```
 
 Rebasing tries to apply your changes commit by commit on top of the new `main` branch.
@@ -89,7 +88,8 @@ The basic steps to resolve conflicts are the following:
 
 - When the rebasing process stops, you can run `git status` to determine which files have issues and fix them locally.
 - After fixing the conflicts in a file `git add filename` them.
-- When all files are dealt with, and `git status` shows no more conflicts, run `git merge --continue`.
+- When all files are dealt with, and `git status` shows no more conflicts, run `git rebase --continue`.
+- If you want to start over, you can cancel the rebase process by running `git rebase --abort`.
 
 > **Note:** If you run `git push --force` after the rebase, the commits on GitLab will be overridden. That means that **old review comments** may be lost during the process, if they are attached to changes in these commits (which is usually the case as all commits are modified during a rebase).
 
