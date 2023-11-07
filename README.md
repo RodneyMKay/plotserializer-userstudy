@@ -17,7 +17,7 @@ View Plot Serializer's documentation on [Read the Docs](https://plot-serializer.
 Clone this repository with
 
 ```cmd
-git clone git@git.rwth-aachen.de:fst-tuda/projects/lehre/plot-serializer.git
+git clone git@git.rwth-aachen.de:fst-tuda/projects/rdm/plot-serializer.git
 ```
 
 
