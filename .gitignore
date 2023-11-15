@@ -1,16 +1,18 @@
 *
+!*/
 
 !*.py
 !*.rst
 !*.rdf
-!.vscode
+!*.md
+
 !.gitignore
-!requirements.txt
-!tests/
-!tests/test_plot.json
-!plot_serializer/
-!doc/
 !make.bat
 !Makefile
 !pyproject.toml
-!plot_serializer/ontologies/
+!requirements.txt
+
+!.vscode/*
+!tests/*
+!plot_serializer/*
+!doc/*
