@@ -10,4 +10,4 @@ black # autoformatting
 mypy # typechecking
 pytest # unit testing
 rdflib
-
+mypy
