@@ -1,21 +1,24 @@
 import sys
 import json
+from typing import Any, Dict, List, Tuple
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure as MplFigure
+from matplotlib.axes import Axes as MplAxes
 import pytest
 
 from plot_serializer.serializer import Serializer
 
 
-def create_benchmark_plot():
+def create_benchmark_plot() -> Tuple[MplFigure, MplAxes]:
     np.random.seed(19680801)
 
     x = np.linspace(0.5, 3.5, 100)
     y1 = 3 + np.cos(x)
     y2 = 1 + np.cos(1 + x / 0.75) / 2
 
-    fig = plt.figure(figsize=(7.5, 7.5))
-    ax = fig.add_axes([0.2, 0.17, 0.68, 0.7], aspect=1)
+    fig: MplFigure = plt.figure(figsize=(7.5, 7.5))
+    ax = fig.add_axes((0.2, 0.17, 0.68, 0.7), aspect=1)
 
     ax.set_xlim(0, 4)
     ax.set_ylim(0, 4)
@@ -36,19 +39,26 @@ def create_benchmark_plot():
     return fig, ax
 
 
-def serialize_plot():
-    fig, ax = create_benchmark_plot()
-    s = Serializer(fig)
-    s.plot.id = "id:ad0cca21"
-    s.plot.axes[0].xunit = "second"
-    s.plot.axes[0].yunit = "blah"
-    s.add_custom_metadata({"date_created": "11.08.2023"}, s.plot)
-    json_object = s.to_json()
+def serialize_plot() -> str:
+    figure, _ = create_benchmark_plot()
+    serializer = Serializer(figure)
+
+    plot = serializer.plot
+
+    if plot is None:
+        raise ValueError("Plot should really not be None here.")
+
+    plot.id = "id:ad0cca21"
+    plot.axes[0].xunit = "second"
+    plot.axes[0].yunit = "blah"
+    serializer.add_custom_metadata({"date_created": "11.08.2023"}, plot)
+    json_object = serializer.to_json()
+
     return json_object
 
 
 @pytest.mark.skipif(not sys.platform.startswith("win"), reason="does not run on linux")
-def test_to_json():
+def test_to_json() -> None:
     benchmark_file = open("tests/test_plot.json")
     benchmark_dict = json.load(benchmark_file)
 
@@ -63,7 +73,7 @@ def test_to_json():
     assert dict_from_serialized == pytest.approx(benchmark_dict, abs=1e-3)
 
 
-def test_to_json_linux():
+def test_to_json_linux() -> None:
     benchmark_file = open("tests/test_plot.json")
     benchmark_dict = json.load(benchmark_file)
 
@@ -78,41 +88,39 @@ def test_to_json_linux():
         assert _recursive_search(value, benchmark_dict[key])
 
 
-def _recursive_search(obj1, obj2):
-    if not isinstance(obj1, dict):
-        if isinstance(obj1, list):
-            return _list_search(obj1, obj2)
-        else:
-            return obj1 == obj2
-    return _nested_dict_search(obj1, obj2)
+def _recursive_search(first: object, second: object) -> bool:
+    if isinstance(first, dict) and isinstance(second, dict):
+        return _nested_dict_search(first, second)
+
+    if isinstance(first, list) and isinstance(second, list):
+        return _list_search(first, second)
+
+    return first == second
 
 
-def _nested_dict_search(obj1, obj2):
+def _nested_dict_search(first: Dict[Any, Any], second: Dict[Any, Any]) -> bool:
     bool_list = []
-    for key, value in obj1.items():
+    for key, value in first.items():
         if isinstance(value, dict):
-            item1 = _recursive_search(value)
-            item2 = _recursive_search(obj2[key])
-            if item1 is not None:
-                bool_list.append(item1 == item2)
+            bool_list.append(_recursive_search(value, second[key]))
         elif isinstance(value, list):
-            bool_list.append(_list_search(value, obj2[key]))
+            bool_list.append(_list_search(value, second[key]))
         else:
             try:
-                bool_list.append(np.allclose(value, obj2[key]))
+                bool_list.append(np.allclose(value, second[key]))
             except (TypeError, np.exceptions.DTypePromotionError):
-                bool_list.append(value == obj2[key])
+                bool_list.append(value == second[key])
     return all(bool_list)
 
 
-def _list_search(l1, l2):
+def _list_search(first: List[Any], second: List[Any]) -> bool:
     bool_list = []
-    for index, item in enumerate(l1):
+    for index, item in enumerate(first):
         if isinstance(item, dict):
-            bool_list.append(_nested_dict_search(item, l2[index]))
+            bool_list.append(_nested_dict_search(item, second[index]))
         else:
             try:
-                bool_list.append(np.allclose(item, l2[index]))
+                bool_list.append(np.allclose(item, second[index]))
             except (TypeError, np.exceptions.DTypePromotionError):
-                bool_list.append(item == l2[index])
+                bool_list.append(item == second[index])
     return all(bool_list)
