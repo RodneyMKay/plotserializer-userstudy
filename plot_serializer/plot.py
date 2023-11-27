@@ -187,7 +187,6 @@ class Dataset:
     def __init__(self: Self) -> None:
         self._URL = None
         self._file_name = None
-        pass
 
 
 class Plot:

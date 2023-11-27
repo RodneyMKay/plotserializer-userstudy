@@ -13,7 +13,6 @@ _T = TypeVar("_T")
 class Deserializer:
     def __init__(self: Self) -> None:
         self._plot = None
-        pass
 
     def from_json(self: Self, filename: str) -> Plot:
         """Creates a Plot object out of a JSON file created with Serializer.

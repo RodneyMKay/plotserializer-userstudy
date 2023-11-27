@@ -14,7 +14,6 @@ class MatplotlibAdapter(Plot):
     def __init__(self: Self, figure: MplFigure) -> None:
         super().__init__()
         self.axes = self.get_axes(figure)
-        pass
 
     def get_axes(self: Self, figure: MplFigure) -> List[Axis]:
         return_axes: List[Axis] = []
