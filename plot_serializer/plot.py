@@ -4,14 +4,14 @@ from typing_extensions import Self
 
 class Trace:
     def __init__(self: Self) -> None:
-        self._xdata: List[int] = list()
-        self._ydata: List[int] = list()
+        self._xdata: List[int] | None = None
+        self._ydata: List[int] | None = None
         self._label: str | None = None
         self._type: str | None = None
         self._color: str | None = None
 
     @property
-    def xdata(self) -> List[int]:
+    def xdata(self) -> List[int] | None:
         return self._xdata
 
     @xdata.setter
@@ -19,7 +19,7 @@ class Trace:
         if not isinstance(data, list):
             raise TypeError("xdata must be a list.")
 
-        if len(self.ydata) != 0 and len(data) != len(self.ydata):
+        if self.ydata is not None and len(data) != len(self.ydata):
             print(f">>> XDATA: {self.xdata}")
             print(f">>> YDATA: {self.ydata}")
             raise RuntimeError("Length of xdata and ydata differs.")
@@ -35,7 +35,7 @@ class Trace:
         if not isinstance(data, list):
             raise TypeError("ydata must be a list.")
 
-        if len(self.xdata) != 0 and len(data) != len(self.xdata):
+        if self.xdata is not None and len(data) != len(self.xdata):
             raise RuntimeError("Length of xdata and ydata differs.")
 
         self._ydata = data
