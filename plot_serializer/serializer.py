@@ -21,7 +21,7 @@ class Serializer:
         suppress_ontology_warnings: bool = False,
     ) -> None:
         self._plot: None | Plot = None
-        self._axis: None | Axis = None
+        self._axis: None | List[Axis] = None
 
         if plot is not None:
             self.load_plot(plot)
@@ -41,11 +41,11 @@ class Serializer:
             self._plot = plot
 
     @property
-    def axis(self: Self) -> Axis | None:
+    def axis(self: Self) -> List[Axis] | None:
         return self._axis
 
     @axis.setter
-    def axis(self: Self, axis: Axis) -> None:
+    def axis(self: Self, axis: List[Axis]) -> None:
         self._axis = axis
 
     def load_plot(self: Self, plot: SerializablePlotType) -> None:
