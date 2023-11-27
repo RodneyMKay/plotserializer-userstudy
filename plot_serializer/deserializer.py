@@ -1,9 +1,13 @@
 from typing_extensions import Self
+from typing import Any, Dict, TypeVar
 import json
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure as MplFigure
 
 from plot_serializer.plot import Plot, Axis, Trace
+
+
+_T = TypeVar("_T")
 
 
 class Deserializer:
@@ -34,7 +38,7 @@ class Deserializer:
             plot.axes.append(axis)
         return plot
 
-    def dict_to_object(self: Self, dictonary: dict, object: object) -> object:
+    def dict_to_object(self: Self, dictonary: Dict[str, Any], object: _T) -> _T:
         for key, value in dictonary.items():
             setattr(object, key, value)
         return object

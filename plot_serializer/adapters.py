@@ -2,10 +2,12 @@
 
 
 """
+from typing import List
 from typing_extensions import Self
 from plot_serializer.plot import Plot, Axis, Trace
+
+from matplotlib.axes import Axes as MplAxes
 from matplotlib.figure import Figure as MplFigure
-from matplotlib.axis import Axis as MplAxis
 
 
 class MatplotlibAdapter(Plot):
@@ -14,28 +16,30 @@ class MatplotlibAdapter(Plot):
         self.axes = self.get_axes(figure)
         pass
 
-    def get_axes(self: Self, figure: MplFigure):
-        axes = []
-        for axis in figure.axes:
-            a = Axis()
-            a.traces = self.get_traces(axis)
-            axes.append(a)
-        return axes
+    def get_axes(self: Self, figure: MplFigure) -> List[Axis]:
+        return_axes: List[Axis] = []
+        for axes in figure.axes:
+            axis = Axis()
+            axis.traces = self.get_traces(axes)
+            return_axes.append(axis)
+        return return_axes
 
-    def get_traces(self: Self, axis: MplAxis):
-        lines = self.get_lines(axis)
+    def get_traces(self: Self, axes: MplAxes) -> List[Trace]:
+        lines = self.get_lines(axes)
         # collections = self.get_collections()
         return lines
 
-    def get_lines(self: Self, axis: MplAxis):
-        lines = []
-        if len(axis.lines) > 0:
-            for line in axis.lines:
+    def get_lines(self: Self, axes: MplAxes) -> List[Trace]:
+        lines: List[Trace] = []
+        if len(axes.lines) > 0:
+            for line in axes.lines:
                 trace = Trace()
+                # FIXME: xdata and ydata could potentially also return
+                # ArrayLike that aren't actually of type int.
                 trace.xdata = list(line.get_xdata())
                 trace.ydata = list(line.get_ydata())
-                trace.label = line.get_label()
-                trace.color = line.get_color()
+                trace.label = str(line.get_label())
+                trace.color = str(line.get_color())
                 trace.type = str(type(line))
                 lines.append(trace)
         return lines
