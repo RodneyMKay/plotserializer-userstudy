@@ -1,6 +1,7 @@
 from typing_extensions import Self
 import json
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure as MplFigure
 
 from plot_serializer.plot import Plot, Axis, Trace
 
@@ -38,7 +39,7 @@ class Deserializer:
             setattr(object, key, value)
         return object
 
-    def json_to_matplotlib(self: Self, json_file: str):
+    def json_to_matplotlib(self: Self, json_file: str) -> MplFigure:
         """Converts the Plot objects from JSON to matplotlib.pyplot.
 
         Args:
