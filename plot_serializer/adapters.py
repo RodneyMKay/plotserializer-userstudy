@@ -2,7 +2,7 @@
 
 
 """
-from typing import Self
+from typing_extensions import Self
 from plot_serializer.plot import Plot, Axis, Trace
 from matplotlib.figure import Figure as MplFigure
 from matplotlib.axis import Axis as MplAxis
