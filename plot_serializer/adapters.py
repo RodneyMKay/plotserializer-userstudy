@@ -2,38 +2,43 @@
 
 
 """
-
+from typing import List
+from typing_extensions import Self
 from plot_serializer.plot import Plot, Axis, Trace
+
+from matplotlib.axes import Axes as MplAxes
+from matplotlib.figure import Figure as MplFigure
 
 
 class MatplotlibAdapter(Plot):
-    def __init__(self, fig) -> None:
+    def __init__(self: Self, figure: MplFigure) -> None:
         super().__init__()
-        self.axes = self.get_axes(fig)
-        pass
+        self.axes = self.get_axes(figure)
 
-    def get_axes(self, fig):
-        axes = []
-        for axis in fig.axes:
-            a = Axis()
-            a.traces = self.get_traces(axis)
-            axes.append(a)
-        return axes
+    def get_axes(self: Self, figure: MplFigure) -> List[Axis]:
+        return_axes: List[Axis] = []
+        for axes in figure.axes:
+            axis = Axis()
+            axis.traces = self.get_traces(axes)
+            return_axes.append(axis)
+        return return_axes
 
-    def get_traces(self, axis):
-        lines = self.get_lines(axis)
+    def get_traces(self: Self, axes: MplAxes) -> List[Trace]:
+        lines = self.get_lines(axes)
         # collections = self.get_collections()
         return lines
 
-    def get_lines(self, axis):
-        lines = []
-        if len(axis.lines) > 0:
-            for line in axis.lines:
-                pe = Trace()
-                pe.xdata = list(line.get_xdata())
-                pe.ydata = list(line.get_ydata())
-                pe.label = line.get_label()
-                pe.color = line.get_color()
-                pe.type = str(type(line))
-                lines.append(pe)
+    def get_lines(self: Self, axes: MplAxes) -> List[Trace]:
+        lines: List[Trace] = []
+        if len(axes.lines) > 0:
+            for line in axes.lines:
+                trace = Trace()
+                # FIXME: xdata and ydata could potentially also return
+                # ArrayLike that aren't actually of type int.
+                trace.xdata = list(line.get_xdata())
+                trace.ydata = list(line.get_ydata())
+                trace.label = str(line.get_label())
+                trace.color = str(line.get_color())
+                trace.type = str(type(line))
+                lines.append(trace)
         return lines

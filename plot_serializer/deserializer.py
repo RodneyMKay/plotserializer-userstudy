@@ -1,15 +1,20 @@
+from typing_extensions import Self
+from typing import Any, Dict, TypeVar
 import json
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure as MplFigure
 
 from plot_serializer.plot import Plot, Axis, Trace
 
 
-class Deserializer:
-    def __init__(self) -> None:
-        self._plot = None
-        pass
+_T = TypeVar("_T")
 
-    def from_json(self, filename):
+
+class Deserializer:
+    def __init__(self: Self) -> None:
+        self._plot = None
+
+    def from_json(self: Self, filename: str) -> Plot:
         """Creates a Plot object out of a JSON file created with Serializer.
 
         Args:
@@ -20,24 +25,24 @@ class Deserializer:
         """
         with open(filename, "r") as openfile:
             # Reading from json file
-            d = json.load(openfile)
-        p = Plot()
-        p.axes = []
-        for a in d["axes"]:
+            file = json.load(openfile)
+        plot = Plot()
+        plot.axes = []
+        for axis_object in file["axes"]:
             axis = Axis()
             axis.traces = []
-            for t in a["traces"]:
+            for trace_object in axis_object["traces"]:
                 plotted_element = Trace()
-                axis.traces.append(self.dict_to_object(t, plotted_element))
-            p.axes.append(axis)
-        return p
+                axis.traces.append(self.dict_to_object(trace_object, plotted_element))
+            plot.axes.append(axis)
+        return plot
 
-    def dict_to_object(self, d, o):
-        for key, value in d.items():
-            setattr(o, key, value)
-        return o
+    def dict_to_object(self: Self, dictonary: Dict[str, Any], object: _T) -> _T:
+        for key, value in dictonary.items():
+            setattr(object, key, value)
+        return object
 
-    def json_to_matplotlib(self, json_file):
+    def json_to_matplotlib(self: Self, json_file: str) -> MplFigure:
         """Converts the Plot objects from JSON to matplotlib.pyplot.
 
         Args:

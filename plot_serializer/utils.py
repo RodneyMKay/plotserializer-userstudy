@@ -3,7 +3,7 @@ from plot_serializer import ontologies
 from rdflib import Graph
 
 
-def unit_in_ontology(unit_name, ontology_path="default"):
+def unit_in_ontology(unit_name: str, ontology_path: str = "default") -> int:
     if ontology_path == "default":
         ontology_path = impresources.files(ontologies) / "om-2.0.rdf"
     g = Graph()
