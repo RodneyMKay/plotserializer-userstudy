@@ -17,32 +17,43 @@ class Vec3F(BaseModel):
     z: float
 
 
+class Vec4F(BaseModel):
+    x1: float
+    x2: float
+    x3: float
+    x4: float
+
+
 # --------------------
 #  2D Plot
 
 
-class Point(BaseModel):
+class Point2D(BaseModel):
     position: Vec2F
-    color: Optional[str]
+    color: Union[int, str, None]
     size: Optional[float]
 
 
 class Line(BaseModel):
-    datapoints: List[Point]
-    color: Optional[str]
+    datapoints: List[Point2D]
+    color: Union[int, str, None]
     thickness: Optional[float]
+    linestyle: Optional[str]
 
 
 class Axis(BaseModel):
+    label: Optional[str]
     unit: str
+    scale: Optional[str]
 
 
 class Plot2D(BaseModel):
     type: Literal["2d"]
+    title: Optional[str]
     x_axis: Axis
     y_axis: Axis
     lines: List[Line]
-    points: List[Point]
+    points: List[Point2D]
 
 
 # --------------------
@@ -57,14 +68,32 @@ class Slice(BaseModel):
 
 class PiePlot(BaseModel):
     type: Literal["pie"]
+    title: Optional[str]
     slice: List[Slice]
+
+
+# --------------------
+# Bar Plot
+
+
+class Bar(BaseModel):
+    position: float
+    height: float
+    width: float
+
+
+class BarPlot(BaseModel):
+    type: Literal["bar"]
+    title: Optional[str]
+    bars: List[Bar]
 
 
 # --------------------
 #  Figure
 
-Plot = Annotated[Union[PiePlot, Plot2D], Field(descriminator="type")]
+Plot = Annotated[Union[PiePlot, Plot2D, BarPlot], Field(descriminator="type")]
 
 
 class Figure(BaseModel):
+    title: Optional[str]
     plots: List[Plot]
