@@ -11,6 +11,9 @@ from matplotlib.lines import Line2D
 from matplotlib.path import Path
 import matplotlib.pyplot as plt
 
+from plot_serializer.adapter import Adapter
+from plot_serializer.adapter.matplotlib import MatplotlibAdapter
+
 import numpy as np
 
 sys.path.append(

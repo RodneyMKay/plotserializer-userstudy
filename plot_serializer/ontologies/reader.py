@@ -3,6 +3,11 @@ from plot_serializer import ontologies
 from rdflib import Graph
 
 
+class OntologyWarning(UserWarning):
+    def __init__(self: Self, message: str):
+        super().__init__(message)
+
+
 def unit_in_ontology(unit_name: str, ontology_path: str = "default") -> int:
     if ontology_path == "default":
         ontology_path = impresources.files(ontologies) / "om-2.0.rdf"
