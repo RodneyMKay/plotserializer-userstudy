@@ -1,4 +1,3 @@
-from math import degrees, radians
 from typing import Annotated, List, Literal, Optional, Union
 from pydantic import BaseModel, Field
 
@@ -26,6 +25,18 @@ class Vec4F(BaseModel):
 
 
 # --------------------
+#  General classes
+
+
+Scale = Union[Literal["linear"], Literal["logarithmic"]]
+
+
+class Axis(BaseModel):
+    label: Optional[str] = None
+    scale: Optional[Scale] = None  # Defaults to linear
+
+
+# --------------------
 #  2D Plot
 
 
@@ -42,16 +53,9 @@ class Line(BaseModel):
     linestyle: Optional[str] = None
 
 
-class Axis(BaseModel):
-    unit: str
-    label: Optional[str] = None
-    scale: Optional[str] = None
-    show: bool = True
-
-
 class Plot2D(BaseModel):
-    type: Literal["2d"]
-    title: Optional[str]
+    type: Literal["2d"] = "2d"
+    title: Optional[str] = None
     x_axis: Axis
     y_axis: Axis
     lines: List[Line]
@@ -71,7 +75,8 @@ class Slice(BaseModel):
 
 
 class PiePlot(BaseModel):
-    type: Literal["pie"]
+    type: Literal["pie"] = "pie"
+    title: Optional[str] = None
     slices: List[Slice]
 
 
@@ -80,21 +85,22 @@ class PiePlot(BaseModel):
 
 
 class Bar(BaseModel):
-    position: float
+    name: str
     height: float
-    width: float
+    color: str
 
 
 class BarPlot(BaseModel):
-    type: Literal["bar"]
-    title: Optional[str]
+    type: Literal["bar"] = "bar"
+    title: Optional[str] = None
+    y_axis: Axis
     bars: List[Bar]
 
 
 # --------------------
 #  Figure
 
-Plot = Annotated[Union[PiePlot, Plot2D, BarPlot], Field(descriminator="type")]
+Plot = Annotated[Union[PiePlot, Plot2D, BarPlot], Field(discriminator="type")]
 
 
 class Figure(BaseModel):

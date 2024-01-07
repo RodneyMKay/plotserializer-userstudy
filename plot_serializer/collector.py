@@ -1,4 +1,4 @@
-from typing import TextIO, Union
+from typing import Callable, List, TextIO, Union
 from plot_serializer.model import Figure
 from abc import ABC
 
@@ -13,6 +13,10 @@ class Collector(ABC):
 
     def __init__(self) -> None:
         self._figure = Figure()
+        self._collect_actions: List[Callable[[], None]] = []
+
+    def _add_collect_action(self, action: Callable[[], None]) -> None:
+        self._collect_actions.append(action)
 
     def json(self) -> str:
         """
@@ -21,7 +25,10 @@ class Collector(ABC):
         Returns:
             str: Json string
         """
-        return self._figure.model_dump_json(indent=2, exclude_defaults=True)
+        for collect_action in self._collect_actions:
+            collect_action()
+
+        return self._figure.model_dump_json(indent=2, exclude_none=True)
 
     def write_to_file(self, file: Union[TextIO, str]) -> None:
         """
