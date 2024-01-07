@@ -1,4 +1,3 @@
-from io import StringIO
 from typing import TextIO, Union
 from plot_serializer.model import Figure
 from abc import ABC
@@ -22,7 +21,7 @@ class Collector(ABC):
         Returns:
             str: Json string
         """
-        return self._figure.model_dump_json()
+        return self._figure.model_dump_json(indent=2, exclude_defaults=True)
 
     def write_to_file(self, file: Union[TextIO, str]) -> None:
         """

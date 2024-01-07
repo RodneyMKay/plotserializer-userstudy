@@ -63,19 +63,16 @@ class Plot2D(BaseModel):
 
 
 class Slice(BaseModel):
-    # size = f in [0 - 360]
-    degrees: float
-    height: Optional[float]
-    name: Optional[str]
-    color: Optional[str]
+    size: float
+    radius: Optional[float] = None
+    offset: Optional[float] = None
+    name: Optional[str] = None
+    color: Optional[str] = None
 
 
 class PiePlot(BaseModel):
-    """order der slices ist order der Liste"""
-
     type: Literal["pie"]
-    title: Optional[str]
-    slice: List[Slice]
+    slices: List[Slice]
 
 
 # --------------------
