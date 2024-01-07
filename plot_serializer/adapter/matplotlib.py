@@ -1,9 +1,12 @@
 from typing import Any, List
 from typing_extensions import Self
+
 from matplotlib.collections import PathCollection
 from matplotlib.container import BarContainer, ErrorbarContainer
-
+from matplotlib.figure import Figure as MplFigure
 from matplotlib.lines import Line2D as MplLine2D
+from matplotlib.axes import Axes as MplAxes
+
 from plot_serializer.adapter import Adapter
 from plot_serializer.model import (
     Axis,
@@ -16,12 +19,15 @@ from plot_serializer.model import (
     Point2D,
     Vec2F,
 )
-from matplotlib.figure import Figure as MplFigure
-from matplotlib.axes import Axes as MplAxes
 
 
 class MatplotlibAdapter(Adapter):
     def serialize(self: Self, figure: Any) -> Figure:
+        if not isinstance(figure, MplFigure):
+            raise TypeError(
+                "The matplotlib adapter cannot read from objects that are not matplotlib figures!"
+            )
+
         return Figure(plots=self.get_plots(mplAxes=figure.axes))
 
         raise NotImplementedError()

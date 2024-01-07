@@ -5,7 +5,7 @@ import inspect
 import warnings
 from collections import OrderedDict
 from plot_serializer.adapters import MatplotlibAdapter
-from plot_serializer.exceptions import OntologyWarning
+from plot_serializer.ontologies.reader import OntologyWarning
 from plot_serializer.plot import Plot, Axis, Trace
 from matplotlib.figure import Figure as MplFigure
 

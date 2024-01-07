@@ -13,3 +13,7 @@ class Adapter(ABC):
     @abstractmethod
     def deserialize(self: Self, figure: Figure) -> Any:
         pass
+
+
+def select_adapter(name: str):
+    pass

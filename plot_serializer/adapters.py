@@ -6,10 +6,7 @@ from typing import List
 from typing_extensions import Self
 
 from matplotlib.axes import Axes as MplAxes
-from matplotlib.collections import PathCollection
-from matplotlib.container import BarContainer, ErrorbarContainer
 from matplotlib.figure import Figure as MplFigure
-from matplotlib.lines import Line2D
 
 from plot_serializer.plot import Plot as plPlot, Axis as plAxis, Trace as plTrace
 
