@@ -1,14 +1,14 @@
-from typing import Any
+from typing import Any, Generic, TypeVar
 
 
-class Proxy:
-    def __init__(self, delegate: Any) -> None:
+T = TypeVar("T")
+
+
+class Proxy(Generic[T]):
+    def __init__(self, delegate: T) -> None:
         self._delegate = delegate
 
     def __getattribute__(self, __name: str) -> Any:
-        if __name.startswith("_"):
-            return super().__getattribute__(__name)
-
         own_value = super().__getattribute__(__name)
 
         if own_value is not None:
