@@ -1,3 +1,4 @@
+from math import degrees, radians
 from typing import Annotated, List, Literal, Optional, Union
 from pydantic import BaseModel, Field
 
@@ -18,10 +19,10 @@ class Vec3F(BaseModel):
 
 
 class Vec4F(BaseModel):
-    x1: float
-    x2: float
-    x3: float
-    x4: float
+    x: float
+    y: float
+    z: float
+    w: float
 
 
 # --------------------
@@ -30,21 +31,22 @@ class Vec4F(BaseModel):
 
 class Point2D(BaseModel):
     position: Vec2F
-    color: Union[int, str, None]
-    size: Optional[float]
+    color: Optional[str] = None
+    size: Optional[float] = None
 
 
 class Line(BaseModel):
     datapoints: List[Point2D]
-    color: Union[int, str, None]
-    thickness: Optional[float]
-    linestyle: Optional[str]
+    color: Optional[str] = None
+    thickness: Optional[float] = None
+    linestyle: Optional[str] = None
 
 
 class Axis(BaseModel):
-    label: Optional[str]
     unit: str
-    scale: Optional[str]
+    label: Optional[str] = None
+    scale: Optional[str] = None
+    show: bool = True
 
 
 class Plot2D(BaseModel):
@@ -61,12 +63,16 @@ class Plot2D(BaseModel):
 
 
 class Slice(BaseModel):
-    size: float
-    name: str
+    # size = f in [0 - 360]
+    degrees: float
+    height: Optional[float]
+    name: Optional[str]
     color: Optional[str]
 
 
 class PiePlot(BaseModel):
+    """order der slices ist order der Liste"""
+
     type: Literal["pie"]
     title: Optional[str]
     slice: List[Slice]
@@ -95,5 +101,5 @@ Plot = Annotated[Union[PiePlot, Plot2D, BarPlot], Field(descriminator="type")]
 
 
 class Figure(BaseModel):
-    title: Optional[str]
-    plots: List[Plot]
+    title: Optional[str] = None
+    plots: List[Plot] = []
