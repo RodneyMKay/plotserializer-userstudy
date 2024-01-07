@@ -1,52 +1,25 @@
-from typing import Any, List, Literal, Sequence, Tuple, Union
-from matplotlib.axes import Axes as MplAxes
+from typing import Any, Literal, Sequence, Tuple
 from matplotlib.figure import Figure as MplFigure
 import matplotlib.pyplot
 import numpy as np
-from plot_serializer.model import Figure, Line
+from plot_serializer.collector import Collector
+from plot_serializer.model import Figure, PiePlot
 
 from plot_serializer.proxy import Proxy
 
 
-class Line2DProxy(Proxy):
-    pass
-
-
-class PathCollectionProxy(Proxy):
-    pass
-
-
-class WedgeProxy(Proxy):
-    pass
-
-
-class TextProxy(Proxy):
-    pass
-
-
 class AxesProxy(Proxy):
-    def pie(
-        self,
-    ) -> Union[
-        Tuple[List[WedgeProxy], List[TextProxy]],
-        Tuple[List[WedgeProxy], List[TextProxy], List[TextProxy]],
-    ]:
-        pass
+    def __init__(self, delegate: Any, figure: Figure) -> None:
+        self._figure = figure
+        super().__init__(delegate)
 
-    def plot(self, *args, **kwargs) -> Line2DProxy:
-        self.proxy_call("plot", args, kwargs)
-        pass
-
-    def scatter(
-        self,
-    ) -> PathCollectionProxy:
-        pass
+    def pie(self, *args: Any, **kwargs: Any) -> Any:
+        pie_plot = PiePlot()
+        self._figure.plots.append(pie_plot)
+        return self.proxy_call("pie", *args, **kwargs)
 
 
-class MatplotlibCollector:
-    def __init__(self) -> None:
-        self._figure = Figure()
-
+class MatplotlibCollector(Collector):
     def subplots(
         self,
         nrows: int = 1,
@@ -77,8 +50,8 @@ class MatplotlibCollector:
         new_axes: Any
 
         if isinstance(axes, np.ndarray):
-            new_axes = np.array(map(AxesProxy, axes))
+            new_axes = np.array(map(lambda x: AxesProxy(x, self._figure), axes))
         else:
-            new_axes = AxesProxy(axes)
+            new_axes = AxesProxy(axes, self._figure)
 
         return (figure, new_axes)
