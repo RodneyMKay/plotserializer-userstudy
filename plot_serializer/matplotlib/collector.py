@@ -151,35 +151,15 @@ class MatplotlibCollector(Collector):
 
     def subplots(
         self,
-        nrows: Union[Literal[1], int] = 1,
-        ncols: Union[Literal[1], int] = 1,
-        *,
-        sharex: Union[bool, Literal["none", "all", "row", "col"]] = False,
-        sharey: Union[bool, Literal["none", "all", "row", "col"]] = False,
-        squeeze: bool = True,
-        width_ratios: Optional[Sequence[float]] = None,
-        height_ratios: Optional[Sequence[float]] = None,
-        subplot_kw: Optional[Dict[str, Any]] = None,
-        gridspec_kw: Optional[Dict[str, Any]] = None,
-        **fig_kw: Any,
+        *args: Any,
+        **kwargs: Any,
     ) -> Tuple[MplFigure, Union[MplAxes, Any]]:
         def create_proxy(mpl_axes: MplAxes) -> AxesProxy:
             proxy = AxesProxy(mpl_axes, self._figure, self)
             self._add_collect_action(lambda: proxy._on_collect())
             return proxy
 
-        figure, axes = matplotlib.pyplot.subplots(
-            nrows,
-            ncols,
-            sharex=sharex,
-            sharey=sharey,
-            squeeze=squeeze,
-            width_ratios=width_ratios,
-            height_ratios=height_ratios,
-            subplot_kw=subplot_kw,
-            gridspec_kw=gridspec_kw,
-            **fig_kw,
-        )
+        figure, axes = matplotlib.pyplot.subplots(*args, **kwargs)
 
         new_axes: Any
 
