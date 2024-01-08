@@ -1,5 +1,6 @@
 from typing import (
     Any,
+    Iterable,
     List,
     Optional,
     Tuple,
@@ -37,6 +38,13 @@ def _convert_matplotlib_scale(scale: str) -> Scale:
         )
 
 
+def _convert_matplotlib_color(color: str) -> str:
+    # TODO: We leave the color as-is for now, but we should probably
+    #  build some kind of conversion later, so plotserializer has a
+    #  predictable color format between different plotting libraries.
+    return color
+
+
 class AxesProxy(Proxy[MplAxes]):
     def __init__(self, delegate: MplAxes, figure: Figure, collector: Collector) -> None:
         super().__init__(delegate)
@@ -44,8 +52,8 @@ class AxesProxy(Proxy[MplAxes]):
         self._collector = collector
         self._plot: Optional[Plot] = None
 
-    # TODO: Technically the signature of size_list is wrong...
-    def pie(self, size_list: List[float], **kwargs: Any) -> Any:
+    # FIXME: size_list cannot only be floats, but also different other types of data
+    def pie(self, size_list: Iterable[float], **kwargs: Any) -> Any:
         if self._plot is not None:
             raise NotImplementedError(
                 "PlotSerializer does not yet support adding multiple plots per axes!"
@@ -65,15 +73,23 @@ class AxesProxy(Proxy[MplAxes]):
             radius = radius_list[i] if i < len(radius_list) else None
 
             slices.append(
-                Slice(size=size, radius=radius, offset=explode, name=label, color=color)
+                Slice(
+                    size=size,
+                    radius=radius,
+                    offset=explode,
+                    name=label,
+                    color=_convert_matplotlib_color(color),
+                )
             )
 
         pie_plot = PiePlot(slices=slices)
         self._plot = pie_plot
         return self.delegate().pie(size_list, **kwargs)
 
-    # TODO: Technically the signature of name_list and height_list is wrong...
-    def bar(self, name_list: List[str], height_list: List[float], **kwargs: Any) -> Any:
+    # FIXME: name_list and height_list cannot only be floats, but also different other types of data
+    def bar(
+        self, name_list: Iterable[str], height_list: Iterable[float], **kwargs: Any
+    ) -> Any:
         if self._plot is not None:
             raise NotImplementedError(
                 "PlotSerializer does not yet support adding multiple plots per axes!"
@@ -87,7 +103,9 @@ class AxesProxy(Proxy[MplAxes]):
             height = height_list[i]
             color = color_list[i] if i < len(color_list) else None
 
-            bars.append(Bar(name=name, height=height, color=color))
+            bars.append(
+                Bar(name=name, height=height, color=_convert_matplotlib_color(color))
+            )
 
         bar_plot = BarPlot(y_axis=Axis(), bars=bars)
         self._plot = bar_plot
@@ -110,23 +128,23 @@ class AxesProxy(Proxy[MplAxes]):
 
 
 class MatplotlibCollector(Collector):
+    def _create_axes_proxy(self, mpl_axes: MplAxes) -> AxesProxy:
+        proxy = AxesProxy(mpl_axes, self._figure, self)
+        self._add_collect_action(lambda: proxy._on_collect())
+        return proxy
+
     def subplots(
         self,
         *args: Any,
         **kwargs: Any,
     ) -> Tuple[MplFigure, Union[MplAxes, Any]]:
-        def create_proxy(mpl_axes: MplAxes) -> AxesProxy:
-            proxy = AxesProxy(mpl_axes, self._figure, self)
-            self._add_collect_action(lambda: proxy._on_collect())
-            return proxy
-
         figure, axes = matplotlib.pyplot.subplots(*args, **kwargs)
 
         new_axes: Any
 
         if isinstance(axes, np.ndarray):
-            new_axes = np.array(map(lambda x: create_proxy(x), axes))
+            new_axes = np.array(list(map(self._create_axes_proxy, axes)))
         else:
-            new_axes = create_proxy(axes)
+            new_axes = self._create_axes_proxy(axes)
 
         return (figure, new_axes)
