@@ -22,6 +22,9 @@
     "python.testing.pytestEnabled": true,
     "autoDocstring.docstringFormat": "google",
     "files.exclude": {
-        "**/__pycache__": true
+        "**/__pycache__": true,
+        "env": true,
+        ".pytest_cache": true,
+        ".mypy_cache": true
     },
 }
