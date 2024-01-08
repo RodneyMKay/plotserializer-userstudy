@@ -1,18 +1,18 @@
-*
-!*/
+# Ignore everything in the *root directory*
+/*
 
-!*.py
-!*.rst
-!*.rdf
-!*.md
+# Ignore all pycache folders everywhere
+__pycache__
 
-!.gitignore
-!make.bat
-!Makefile
-!pyproject.toml
-!requirements.txt
+# Don't ignore the following files/folders in the root directory
+!/.gitlab
+!/.vscode
+!/tests
+!/plot_serializer
+!/doc
 
-!.vscode/*
-!tests/*
-!plot_serializer/*
-!doc/*
+!/.gitignore
+!/make.bat
+!/Makefile
+!/pyproject.toml
+!/requirements.txt
