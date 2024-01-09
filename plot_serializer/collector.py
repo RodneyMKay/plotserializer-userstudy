@@ -1,5 +1,5 @@
 from typing import Callable, List, TextIO, Union
-from plot_serializer.model import Figure
+from plot_serializer.model import Figure, MetadataValue
 from abc import ABC
 
 
@@ -18,6 +18,12 @@ class Collector(ABC):
     def _add_collect_action(self, action: Callable[[], None]) -> None:
         self._collect_actions.append(action)
 
+    def add_custom_metadata(self, name: str, value: MetadataValue) -> None:
+        self._figure.metadata[name] = value
+
+    def serialized_figure(self) -> Figure:
+        return self._figure
+
     def json(self) -> str:
         """
         Returns the data that has been collected so far as a json-encoded string.
@@ -28,7 +34,7 @@ class Collector(ABC):
         for collect_action in self._collect_actions:
             collect_action()
 
-        return self._figure.model_dump_json(indent=2, exclude_none=True)
+        return self._figure.model_dump_json(indent=2, exclude_defaults=True)
 
     def write_to_file(self, file: Union[TextIO, str]) -> None:
         """

@@ -1,4 +1,4 @@
-from typing import Annotated, List, Literal, Optional, Union
+from typing import Annotated, Dict, List, Literal, Optional, Union
 from pydantic import BaseModel, Field
 
 
@@ -36,6 +36,10 @@ class Axis(BaseModel):
     scale: Optional[Scale] = None  # Defaults to linear
 
 
+MetadataValue = Union[int, float, str]
+Metadata = Dict[str, MetadataValue]
+
+
 # --------------------
 #  2D Plot
 
@@ -47,14 +51,15 @@ class Point2D(BaseModel):
 
 
 class Line(BaseModel):
-    datapoints: List[Point2D]
     color: Optional[str] = None
     thickness: Optional[float] = None
     linestyle: Optional[str] = None
+    label: Optional[str] = None
+    datapoints: List[Vec2F]
 
 
 class Plot2D(BaseModel):
-    type: Literal["2d"] = "2d"
+    type: Literal["2d"]
     title: Optional[str] = None
     x_axis: Axis
     y_axis: Axis
@@ -75,7 +80,7 @@ class Slice(BaseModel):
 
 
 class PiePlot(BaseModel):
-    type: Literal["pie"] = "pie"
+    type: Literal["pie"]
     title: Optional[str] = None
     slices: List[Slice]
 
@@ -91,7 +96,7 @@ class Bar(BaseModel):
 
 
 class BarPlot(BaseModel):
-    type: Literal["bar"] = "bar"
+    type: Literal["bar"]
     title: Optional[str] = None
     y_axis: Axis
     bars: List[Bar]
@@ -100,9 +105,11 @@ class BarPlot(BaseModel):
 # --------------------
 #  Figure
 
+
 Plot = Annotated[Union[PiePlot, Plot2D, BarPlot], Field(discriminator="type")]
 
 
 class Figure(BaseModel):
     title: Optional[str] = None
     plots: List[Plot] = []
+    metadata: Metadata = {}
