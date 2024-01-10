@@ -92,7 +92,7 @@ class PiePlot(BaseModel):
 class Bar(BaseModel):
     name: str
     height: float
-    color: str
+    color: Optional[str] = None
 
 
 class BarPlot(BaseModel):
