@@ -29,6 +29,7 @@ author = "Michaela Lestakova, Kevin Logan"
 # ones.
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinxcontrib.autodoc_pydantic",
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
     "sphinx_rtd_theme",
@@ -58,4 +59,13 @@ html_theme = "sphinx_rtd_theme"
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ["_static"]
+html_static_path = ["static"]
+
+# TODO: Currently sphinx throws an exception when we try to generate the documentation.
+#  This issue on GitHub, which suggests installing this plugin might help:
+#  https://github.com/sphinx-doc/sphinx/issues/11016
+#  However, this does not seem to do the trick, so we are going to have to revisit
+#  this issue later.
+
+# autodoc_pydantic_model_show_json = True
+# autodoc_pydantic_settings_show_json = False

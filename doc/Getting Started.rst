@@ -3,9 +3,9 @@ Getting Started
 
 Installation
 ------------
-Install Plot Serializer by running
+Install PlotSerializer by running
 
-.. code-block:: python
+.. code-block:: bash
 
     pip install plot-serializer
 
@@ -19,15 +19,13 @@ We will serialize an example matplotlib plot that we have created as follows:
     import numpy as np
     import matplotlib.pyplot as plt
 
+    fig, ax = plt.subplots()
+
     np.random.seed(19680801)
 
     X = np.round(np.linspace(0.5, 3.5, 100), 3)
     Y1 = 3 + np.cos(X)
     Y2 = 1 + np.cos(1 + X / 0.75) / 2
-    Y3 = np.round(np.random.uniform(Y1, Y2, len(X)), 3)
-
-    fig1 = plt.figure(figsize=(7.5, 7.5))
-    ax = fig1.add_axes([0.2, 0.17, 0.68, 0.7], aspect=1)
 
     ax.set_xlim(0, 4)
     ax.set_ylim(0, 4)
@@ -46,47 +44,47 @@ We will serialize an example matplotlib plot that we have created as follows:
     ax.legend(loc="upper right", fontsize=14)
 
 
-We create a ``Serializer`` object with the figure:
+Of particular interest are the two following lines:
 
 .. code-block:: python
 
-    from plot_serializer.serializer import Serializer
+    import matplotlib.pyplot as plt
 
-    s = Serializer(fig1)
+    fig, ax = plt.subplots()
 
-Optionally, we add some metadata:
+To collect the data from the plot, we want to serialize, we first need to create a ``Collector`` object.
+Specifically, since we're looking at matplotlib in this case, we need to create a ``MatplotlibCollector``.
+The ``MatplotlibCollector`` also exposes a ``subplots()``-Method.
+This way the ``Collector`` is able to capture everything you do with the returned objects.
 
-.. code-block:: python
-
-    s.plot.id = plotids.figure_ids[0]
-    s.plot.axes[0].xunit = "second"
-    s.plot.axes[0].yunit = "meter"
-    s.add_custom_metadata({"date_created": "11.08.2023"}, s.plot)
-
-and then export to a JSON string:
+In concrete terms, we replace the two lines above with the following code:
 
 .. code-block:: python
 
-    json_object = s.to_json()
+    from plot_serializer.matplotlib.collector import MatplotlibCollector
 
-Finally, we can save the JSON string into a file:
+    collector = MatplotlibCollector()
+    fig, ax = plt.subplots()
+
+Optionally, we can add some metadata to the resulting Json:
 
 .. code-block:: python
 
-    with open("test_plot.json", "w+") as outfile:
-        outfile.write(json_object)
+    collector.add_custom_metadata("date_created", "10.01.2023")
 
+Finally, get the resulting Json string, we can invoke the ``json()``-Method on the collector:
+
+.. code-block:: python
+
+    collector.json()
+
+We can also write the plot to a file directly:
+
+.. code-block:: python
+
+    collector.write_json_file("test_plot.json")
 
 Deserializing a plot from JSON
 ------------------------------
 
-To deserialize the plot from a JSON file created with the ``Serializer``, we run
-
-.. code-block:: python
-
-    from plot_serializer.deserializer import Deserializer
-
-    ds = Deserializer()
-    fig = ds.json_to_matplotlib("test_plot.json")
-
-    fig.show()
+TODO

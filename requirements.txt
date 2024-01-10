@@ -5,6 +5,7 @@ matplotlib
 sphinx # documentation
 sphinx_rtd_theme
 sphinx-autoapi
+autodoc_pydantic
 flake8 # linting
 black # autoformatting
 mypy # typechecking
