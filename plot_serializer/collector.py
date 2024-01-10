@@ -36,7 +36,7 @@ class Collector(ABC):
 
         return self._figure.model_dump_json(indent=2, exclude_defaults=True)
 
-    def write_to_file(self, file: Union[TextIO, str]) -> None:
+    def write_json_file(self, file: Union[TextIO, str]) -> None:
         """
         Writes the collected data as json to a file on disk.
 
@@ -45,6 +45,6 @@ class Collector(ABC):
         """
         if isinstance(file, str):
             with open(file, "w") as file:
-                self.write_to_file(file)
+                self.write_json_file(file)
         else:
             file.write(self.json())
