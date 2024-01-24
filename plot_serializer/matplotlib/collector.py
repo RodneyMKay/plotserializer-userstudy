@@ -30,6 +30,9 @@ from plot_serializer.model import (
 )
 
 
+__all__ = ["MatplotlibCollector"]
+
+
 def _convert_matplotlib_scale(scale: str) -> Scale:
     if scale == "linear":
         return "linear"
@@ -48,7 +51,7 @@ def _convert_matplotlib_color(color: str) -> str:
     return color
 
 
-class AxesProxy(Proxy[MplAxes]):
+class _AxesProxy(Proxy[MplAxes]):
     def __init__(self, delegate: MplAxes, figure: Figure, collector: Collector) -> None:
         super().__init__(delegate)
         self._figure = figure
@@ -87,7 +90,7 @@ class AxesProxy(Proxy[MplAxes]):
 
         pie_plot = PiePlot(type="pie", slices=slices)
         self._plot = pie_plot
-        return self.delegate().pie(size_list, **kwargs)
+        return self.delegate.pie(size_list, **kwargs)
 
     # FIXME: name_list and height_list cannot only be floats, but also different other types of data
     def bar(
@@ -112,10 +115,10 @@ class AxesProxy(Proxy[MplAxes]):
 
         bar_plot = BarPlot(type="bar", y_axis=Axis(), bars=bars)
         self._plot = bar_plot
-        return self.delegate().bar(name_list, height_list, **kwargs)
+        return self.delegate.bar(name_list, height_list, **kwargs)
 
     def plot(self, *args: Any, **kwargs: Any) -> None:
-        mpl_lines = self.delegate().plot(*args, **kwargs)
+        mpl_lines = self.delegate.plot(*args, **kwargs)
         lines: List[Line] = []
 
         for mpl_line in mpl_lines:
@@ -160,23 +163,23 @@ class AxesProxy(Proxy[MplAxes]):
         if self._plot is None:
             return
 
-        self._plot.title = self.delegate().get_title()
+        self._plot.title = self.delegate.get_title()
 
         if isinstance(self._plot, BarPlot):
-            ylabel = self.delegate().get_ylabel()
-            yscale = _convert_matplotlib_scale(self.delegate().get_yscale())
+            ylabel = self.delegate.get_ylabel()
+            yscale = _convert_matplotlib_scale(self.delegate.get_yscale())
 
             self._plot.y_axis.label = ylabel
             self._plot.y_axis.scale = yscale
         elif isinstance(self._plot, Plot2D):
-            xlabel = self.delegate().get_xlabel()
-            xscale = _convert_matplotlib_scale(self.delegate().get_xscale())
+            xlabel = self.delegate.get_xlabel()
+            xscale = _convert_matplotlib_scale(self.delegate.get_xscale())
 
             self._plot.x_axis.label = xlabel
             self._plot.x_axis.scale = xscale
 
-            ylabel = self.delegate().get_ylabel()
-            yscale = _convert_matplotlib_scale(self.delegate().get_yscale())
+            ylabel = self.delegate.get_ylabel()
+            yscale = _convert_matplotlib_scale(self.delegate.get_yscale())
 
             self._plot.y_axis.label = ylabel
             self._plot.y_axis.scale = yscale
@@ -185,8 +188,16 @@ class AxesProxy(Proxy[MplAxes]):
 
 
 class MatplotlibCollector(Collector):
-    def _create_axes_proxy(self, mpl_axes: MplAxes) -> AxesProxy:
-        proxy = AxesProxy(mpl_axes, self._figure, self)
+    """
+    Collector specific to matplotlib. Most of the methods on this object mirror the
+    matplotlib.pyplot api from matplotlib.
+
+    Args:
+        Collector (_type_): _description_
+    """
+
+    def _create_axes_proxy(self, mpl_axes: MplAxes) -> _AxesProxy:
+        proxy = _AxesProxy(mpl_axes, self._figure, self)
         self._add_collect_action(lambda: proxy._on_collect())
         return proxy
 
