@@ -10,6 +10,8 @@ from typing import (
 from matplotlib.figure import Figure as MplFigure
 from matplotlib.axes import Axes as MplAxes
 import matplotlib.pyplot
+from matplotlib.lines import Line2D
+from matplotlib.container import BarContainer
 
 import numpy as np
 
@@ -91,8 +93,11 @@ class AxesProxy(Proxy[MplAxes]):
 
     # FIXME: name_list and height_list cannot only be floats, but also different other types of data
     def bar(
-        self, name_list: Iterable[str], height_list: Iterable[float], **kwargs: Any
-    ) -> Any:
+        self,
+        name_list: Iterable[str],
+        height_list: Iterable[float],
+        **kwargs: Any
+    ) -> BarContainer:
         if self._plot is not None:
             raise NotImplementedError(
                 "PlotSerializer does not yet support adding multiple plots per axes!"
@@ -114,7 +119,7 @@ class AxesProxy(Proxy[MplAxes]):
         self._plot = bar_plot
         return self.delegate().bar(name_list, height_list, **kwargs)
 
-    def plot(self, *args: Any, **kwargs: Any) -> None:
+    def plot(self, *args: Any, **kwargs: Any) -> list[Line2D]:
         mpl_lines = self.delegate().plot(*args, **kwargs)
         lines: List[Line] = []
 
