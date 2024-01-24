@@ -120,7 +120,7 @@ class _AxesProxy(Proxy[MplAxes]):
         return self.delegate.bar(name_list, height_list, **kwargs)
 
     def plot(self, *args: Any, **kwargs: Any) -> list[Line2D]:
-        mpl_lines = self.delegate().plot(*args, **kwargs)
+        mpl_lines = self.delegate.plot(*args, **kwargs)
         lines: List[Line] = []
 
         for mpl_line in mpl_lines:
