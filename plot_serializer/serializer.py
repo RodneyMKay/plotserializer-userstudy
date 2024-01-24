@@ -3,10 +3,10 @@ from plot_serializer.model import Figure, MetadataValue
 from abc import ABC
 
 
-class Collector(ABC):
+class Serializer(ABC):
     """
-    A Collector is an object that has a subclass for different libraries
-    (e.g. MatplotlibCollector). The Collector allows you to use a library like
+    A Serializer is an object that has a subclass for different libraries
+    (e.g. MatplotlibSerializer). The Serializer allows you to use a library like
     you would normally, while collecting all the data you specify inside the plotting
     library and providing methods for serializing that information to json.
     """
@@ -17,7 +17,7 @@ class Collector(ABC):
 
     def _add_collect_action(self, action: Callable[[], None]) -> None:
         # Internal method to register a function that will be run every time
-        # the user accesses the current collector state.
+        # the user accesses the current serializer state.
         self._collect_actions.append(action)
 
     def add_custom_metadata(self, name: str, value: MetadataValue) -> None:
@@ -36,7 +36,7 @@ class Collector(ABC):
     def serialized_figure(self) -> Figure:
         """
         Returns a figure object that contains all the data that has been captured
-        by this collector so far. The figure object is guaranteed to not change
+        by this serializer so far. The figure object is guaranteed to not change
         further after it has been returned.
 
         Returns:
@@ -47,7 +47,7 @@ class Collector(ABC):
 
         return self._figure.model_copy(deep=True)
 
-    def json(self) -> str:
+    def to_json(self) -> str:
         """
         Returns the data that has been collected so far as a json-encoded string.
 
@@ -67,4 +67,4 @@ class Collector(ABC):
             with open(file, "w") as file:
                 self.write_json_file(file)
         else:
-            file.write(self.json())
+            file.write(self.to_json())

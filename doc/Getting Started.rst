@@ -52,37 +52,37 @@ Of particular interest are the two following lines:
 
     fig, ax = plt.subplots()
 
-To collect the data from the plot, we want to serialize, we first need to create a ``Collector`` object.
-Specifically, since we're looking at matplotlib in this case, we need to create a ``MatplotlibCollector``.
-The ``MatplotlibCollector`` also exposes a ``subplots()``-Method.
-This way the ``Collector`` is able to capture everything you do with the returned objects.
+To collect the data from the plot, we want to serialize, we first need to create a ``Serializer`` object.
+Specifically, since we're looking at matplotlib in this case, we need to create a ``MatplotlibSerializer``.
+The ``MatplotlibSerializer`` also exposes a ``subplots()``-Method.
+This way the ``Serializer`` is able to capture everything you do with the returned objects.
 
 In concrete terms, we replace the two lines above with the following code:
 
 .. code-block:: python
 
-    from plot_serializer.matplotlib.collector import MatplotlibCollector
+    from plot_serializer.matplotlib.serializer import MatplotlibSerializer
 
-    collector = MatplotlibCollector()
-    fig, ax = collector.subplots()
+    serializer = MatplotlibSerializer()
+    fig, ax = serializer.subplots()
 
 Optionally, we can add some metadata to the resulting Json:
 
 .. code-block:: python
 
-    collector.add_custom_metadata("date_created", "10.01.2023")
+    serializer.add_custom_metadata("date_created", "10.01.2023")
 
-Finally, get the resulting Json string, we can invoke the ``json()``-Method on the collector:
+Finally, get the resulting Json string, we can invoke the ``json()``-Method on the serializer:
 
 .. code-block:: python
 
-    collector.json()
+    serializer.to_json()
 
 We can also write the plot to a file directly:
 
 .. code-block:: python
 
-    collector.write_json_file("test_plot.json")
+    serializer.write_json_file("test_plot.json")
 
 Deserializing a plot from JSON
 ------------------------------

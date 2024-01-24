@@ -15,7 +15,7 @@ from matplotlib.container import BarContainer
 
 import numpy as np
 
-from plot_serializer.collector import Collector
+from plot_serializer.collector import Serializer
 from plot_serializer.proxy import Proxy
 from plot_serializer.model import (
     Axis,
@@ -32,7 +32,7 @@ from plot_serializer.model import (
 )
 
 
-__all__ = ["MatplotlibCollector"]
+__all__ = ["MatplotlibSerializer"]
 
 
 def _convert_matplotlib_scale(scale: str) -> Scale:
@@ -54,7 +54,9 @@ def _convert_matplotlib_color(color: str) -> str:
 
 
 class _AxesProxy(Proxy[MplAxes]):
-    def __init__(self, delegate: MplAxes, figure: Figure, collector: Collector) -> None:
+    def __init__(
+        self, delegate: MplAxes, figure: Figure, collector: Serializer
+    ) -> None:
         super().__init__(delegate)
         self._figure = figure
         self._collector = collector
@@ -189,13 +191,13 @@ class _AxesProxy(Proxy[MplAxes]):
         self._figure.plots.append(self._plot)
 
 
-class MatplotlibCollector(Collector):
+class MatplotlibSerializer(Serializer):
     """
-    Collector specific to matplotlib. Most of the methods on this object mirror the
+    Serializer specific to matplotlib. Most of the methods on this object mirror the
     matplotlib.pyplot api from matplotlib.
 
     Args:
-        Collector (_type_): _description_
+        Serializer (_type_): _description_
     """
 
     def _create_axes_proxy(self, mpl_axes: MplAxes) -> _AxesProxy:

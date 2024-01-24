@@ -12,10 +12,10 @@ from typing import (
 from matplotlib.figure import Figure as MplFigure
 from matplotlib.axes import Axes as MplAxes
 
-from plot_serializer.collector import Collector
+from plot_serializer.serializer import Serializer
 
 
-class MatplotlibCollector(Collector):
+class MatplotlibSerializer(Serializer):
     # Fancy way of properly type hinting the subplots method...
     @overload
     def subplots(
