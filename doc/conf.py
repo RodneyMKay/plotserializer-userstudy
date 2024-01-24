@@ -28,7 +28,7 @@ author = "Michaela Lestakova, Kevin Logan"
 extensions = [
     "sphinx.ext.autodoc",  # Generate documentation from docstrings
     "sphinx.ext.autosummary",  # Generate an automatic summary of the packages
-    #    "sphinx.ext.viewcode", # Embed links to view the source code
+    "sphinx.ext.viewcode",  # Embed links to view the source code
     "sphinx.ext.napoleon",  # Plugin to handle different docstring styles
     "sphinxcontrib.autodoc_pydantic",  # Handle pydantic classes
     "sphinx_rtd_theme",  # Apply readthedocs documentation theme
@@ -53,7 +53,6 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-#
 html_theme = "sphinx_rtd_theme"
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -61,10 +60,5 @@ html_theme = "sphinx_rtd_theme"
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["static"]
 
-# TODO: Currently sphinx throws an exception when we try to generate the documentation.
-#  This issue on GitHub, which suggests installing this plugin might help:
-#  https://github.com/sphinx-doc/sphinx/issues/11016
-#  However, this does not seem to do the trick, so we are going to have to revisit
-#  this issue later.
-
+# Show the json schema when displaying pydantic models
 autodoc_pydantic_model_show_json = True

@@ -1,14 +1,23 @@
-python_version >= "3.9"
+# Python version
+python_version >= "3.10"
+
+# Code dependencies
 numpy
-pandas
 matplotlib
-sphinx # documentation
-sphinx_rtd_theme
-sphinx-autoapi
-autodoc_pydantic
-flake8 # linting
-black # autoformatting
-mypy # typechecking
-pytest # unit testing
-rdflib
 pydantic
+rdflib
+
+# Documentation
+sphinx
+sphinx_rtd_theme
+autodoc_pydantic
+
+# Linting & Formatting
+flake8
+black
+
+# Type checking
+mypy
+
+# Unit testing
+pytest
