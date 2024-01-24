@@ -17,10 +17,15 @@ Note: Plot Serializer is currently under development and its functionality is li
 
    Overview
    Getting Started
-   Json Schema
-   autoapi/index
 
+Api documentation:
 
+.. autosummary::
+   :toctree: _autosummary
+   :template: custom-module-template.rst
+   :recursive:
+
+   plot_serializer
 
 Indices and tables
 ==================

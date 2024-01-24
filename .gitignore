@@ -16,3 +16,6 @@ __pycache__
 !/Makefile
 !/pyproject.toml
 !/requirements.txt
+
+# Ignore autosummary from documentation
+/doc/_autosummary
