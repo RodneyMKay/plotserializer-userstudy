@@ -197,7 +197,7 @@ class MatplotlibSerializer(Serializer):
     matplotlib.pyplot api from matplotlib.
 
     Args:
-        Serializer (_type_): _description_
+        Serializer (_type_): Parent class
     """
 
     def _create_axes_proxy(self, mpl_axes: MplAxes) -> _AxesProxy:
