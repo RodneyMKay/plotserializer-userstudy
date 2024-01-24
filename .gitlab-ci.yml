@@ -34,10 +34,6 @@ lint:
   tags:
     - env:docker
   script:
-    #-  python setup.py test
-    #- pip install flake8  # you can also use tox
-    - pwd
-    - ls -lh
     - flake8 . --filename=*.py --exclude=venv/ --max-line-length=120
 
 unit-test:
@@ -45,6 +41,12 @@ unit-test:
     - env:docker
   script:
     - pytest tests/
+
+check-typing:
+  tags:
+    - env:docker
+  script:
+    - mypy --exclude venv .
 
 doc:
   script:

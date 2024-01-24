@@ -1,0 +1,55 @@
+{
+  "plots": [
+    {
+      "type": "bar",
+      "title": "My amazing bar plot",
+      "y_axis": {
+        "label": "log axis",
+        "scale": "logarithmic"
+      },
+      "bars": [
+        {
+          "name": "a",
+          "height": 10.0,
+          "color": "red"
+        },
+        {
+          "name": "b",
+          "height": 20.0,
+          "color": "green"
+        },
+        {
+          "name": "c",
+          "height": 30.0,
+          "color": "blue"
+        },
+        {
+          "name": "d",
+          "height": 40.0,
+          "color": "orange"
+        },
+        {
+          "name": "e",
+          "height": 50.0,
+          "color": "purple"
+        },
+        {
+          "name": "f",
+          "height": 60.0,
+          "color": "cyan"
+        },
+        {
+          "name": "g",
+          "height": 70.0,
+          "color": "blue"
+        },
+        {
+          "name": "h",
+          "height": 80.0,
+          "color": "blue"
+        }
+      ]
+    }
+  ]
+}
+

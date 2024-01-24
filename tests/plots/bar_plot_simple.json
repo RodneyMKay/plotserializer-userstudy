@@ -1,0 +1,46 @@
+{
+  "plots": [
+    {
+      "type": "bar",
+      "title": "",
+      "y_axis": {
+        "label": "",
+        "scale": "linear"
+      },
+      "bars": [
+        {
+          "name": "a",
+          "height": 10.0
+        },
+        {
+          "name": "b",
+          "height": 20.0
+        },
+        {
+          "name": "c",
+          "height": 30.0
+        },
+        {
+          "name": "d",
+          "height": 40.0
+        },
+        {
+          "name": "e",
+          "height": 50.0
+        },
+        {
+          "name": "f",
+          "height": 60.0
+        },
+        {
+          "name": "g",
+          "height": 70.0
+        },
+        {
+          "name": "h",
+          "height": 80.0
+        }
+      ]
+    }
+  ]
+}

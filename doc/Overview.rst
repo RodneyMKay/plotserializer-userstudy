@@ -1,11 +1,15 @@
 Overview
 ========
 
-How Plot Serializer sees diagrams
+How PlotSerializer sees diagrams
 ---------------------------------
 
-Plot Serializer uses its own data model for representing scientific diagrams.
-It is strongly inspired by the `matplotlib figure anatomy <https://matplotlib.org/stable/gallery/showcase/anatomy.html)>`_.
+PlotSerializer uses its own data model for representing scientific diagrams.
+The base class for this data model is ``plot_serializer.model.Figure``.
+A full Json-Schema for this model is available in this documentation as well.
 
-``Plot`` is equivalent to Figure in matplotlib.
-It contains one or more ``Axis`` objects ("subplots"), which in turn contain one or more ``Trace`` objects (lines, scatters, etc.).
+The basics are illustrated by the following diagram:
+
+.. image:: static/data_structure.svg
+  :width: 800
+  :alt: PlotSerializer data structure
