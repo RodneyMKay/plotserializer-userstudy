@@ -64,7 +64,7 @@ In concrete terms, we replace the two lines above with the following code:
     from plot_serializer.matplotlib.collector import MatplotlibCollector
 
     collector = MatplotlibCollector()
-    fig, ax = plt.subplots()
+    fig, ax = collector.subplots()
 
 Optionally, we can add some metadata to the resulting Json:
 

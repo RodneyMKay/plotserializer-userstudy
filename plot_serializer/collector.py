@@ -16,13 +16,36 @@ class Collector(ABC):
         self._collect_actions: List[Callable[[], None]] = []
 
     def _add_collect_action(self, action: Callable[[], None]) -> None:
+        # Internal method to register a function that will be run every time
+        # the user accesses the current collector state.
         self._collect_actions.append(action)
 
     def add_custom_metadata(self, name: str, value: MetadataValue) -> None:
+        """
+        Adds a piece of custom metadata to the generated figure object. All metadata
+        for each object is uniquely identified by a name for that piece of metadata.
+        If a name that already exists on this object is provided, the previously
+        set value will be overridden.
+
+        Args:
+            name (str): Unique name of this piece of metadata
+            value (MetadataValue): Value that this piece of metadata should have
+        """
         self._figure.metadata[name] = value
 
     def serialized_figure(self) -> Figure:
-        return self._figure
+        """
+        Returns a figure object that contains all the data that has been captured
+        by this collector so far. The figure object is guaranteed to not change
+        further after it has been returned.
+
+        Returns:
+            Figure: Figure object
+        """
+        for collect_action in self._collect_actions:
+            collect_action()
+
+        return self._figure.model_copy(deep=True)
 
     def json(self) -> str:
         """
@@ -31,10 +54,7 @@ class Collector(ABC):
         Returns:
             str: Json string
         """
-        for collect_action in self._collect_actions:
-            collect_action()
-
-        return self._figure.model_dump_json(indent=2, exclude_defaults=True)
+        return self.serialized_figure().model_dump_json(indent=2, exclude_defaults=True)
 
     def write_json_file(self, file: Union[TextIO, str]) -> None:
         """
