@@ -15,7 +15,7 @@ from matplotlib.container import BarContainer
 
 import numpy as np
 
-from plot_serializer.collector import Serializer
+from plot_serializer.serializer import Serializer
 from plot_serializer.proxy import Proxy
 from plot_serializer.model import (
     Axis,
@@ -55,11 +55,11 @@ def _convert_matplotlib_color(color: str) -> str:
 
 class _AxesProxy(Proxy[MplAxes]):
     def __init__(
-        self, delegate: MplAxes, figure: Figure, collector: Serializer
+        self, delegate: MplAxes, figure: Figure, serializer: Serializer
     ) -> None:
         super().__init__(delegate)
         self._figure = figure
-        self._collector = collector
+        self._serializer = serializer
         self._plot: Optional[Plot] = None
 
     # FIXME: size_list cannot only be floats, but also different other types of data
