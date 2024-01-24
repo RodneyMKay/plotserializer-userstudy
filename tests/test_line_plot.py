@@ -45,7 +45,7 @@ def test_all_features() -> None:
     ax.legend()
     ax.set_xlim(0, 3)
     ax.set_ylim(0, 3)
-    ax.set_xlabel("$\omega/\omega_0$")
+    ax.set_xlabel(r"$\omega/\omega_0$")
     ax.set_ylabel("$A/A_E$")
     ax.grid(True)
     ax.set_title("Ressonanz")
