@@ -1,55 +1,63 @@
 {
   "plots": [
     {
-      "type": "bar",
+      "type": "2d",
       "title": "My amazing bar plot",
+      "x_axis": {
+        "label": "",
+        "scale": "linear"
+      },
       "y_axis": {
         "label": "log axis",
         "scale": "logarithmic"
       },
-      "bars": [
+      "traces": [
         {
-          "name": "a",
-          "height": 10.0,
-          "color": "red"
-        },
-        {
-          "name": "b",
-          "height": 20.0,
-          "color": "green"
-        },
-        {
-          "name": "c",
-          "height": 30.0,
-          "color": "blue"
-        },
-        {
-          "name": "d",
-          "height": 40.0,
-          "color": "orange"
-        },
-        {
-          "name": "e",
-          "height": 50.0,
-          "color": "purple"
-        },
-        {
-          "name": "f",
-          "height": 60.0,
-          "color": "cyan"
-        },
-        {
-          "name": "g",
-          "height": 70.0,
-          "color": "blue"
-        },
-        {
-          "name": "h",
-          "height": 80.0,
-          "color": "blue"
+          "type": "bar",
+          "datapoints": [
+            {
+              "y": 10.0,
+              "label": "a",
+              "color": "red"
+            },
+            {
+              "y": 20.0,
+              "label": "b",
+              "color": "green"
+            },
+            {
+              "y": 30.0,
+              "label": "c",
+              "color": "blue"
+            },
+            {
+              "y": 40.0,
+              "label": "d",
+              "color": "orange"
+            },
+            {
+              "y": 50.0,
+              "label": "e",
+              "color": "purple"
+            },
+            {
+              "y": 60.0,
+              "label": "f",
+              "color": "cyan"
+            },
+            {
+              "y": 70.0,
+              "label": "g",
+              "color": "blue"
+            },
+            {
+              "y": 80.0,
+              "label": "h",
+              "color": "blue"
+            }
+          ]
         }
       ]
     }
   ]
 }
-
