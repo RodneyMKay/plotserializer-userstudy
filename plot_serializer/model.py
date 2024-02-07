@@ -29,8 +29,8 @@ class Point2D(BaseModel):
     size: Optional[float] = None
 
 
-class PointTrace2D(BaseModel):
-    type: Literal["point"]
+class ScatterTrace2D(BaseModel):
+    type: Literal["scatter"]
     datapoints: List[Point2D]
 
 
@@ -55,7 +55,7 @@ class BarTrace2D(BaseModel):
 
 
 Trace2D = Annotated[
-    Union[PointTrace2D, LineTrace2D, BarTrace2D], Field(discriminator="type")
+    Union[ScatterTrace2D, LineTrace2D, BarTrace2D], Field(discriminator="type")
 ]
 
 
