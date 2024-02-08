@@ -11,11 +11,12 @@
         "label": "$A/A_E$",
         "scale": "linear"
       },
-      "lines": [
+      "traces": [
         {
-          "color": "gray",
-          "thickness": 1.5,
-          "linestyle": "--",
+          "type": "line",
+          "line_color": "gray",
+          "line_thickness": 1.5,
+          "line_style": "--",
           "label": "Einhüllend",
           "datapoints": [
             {
@@ -2021,9 +2022,10 @@
           ]
         },
         {
-          "color": "#1f77b4",
-          "thickness": 1.5,
-          "linestyle": "-",
+          "type": "line",
+          "line_color": "#1f77b4",
+          "line_thickness": 1.5,
+          "line_style": "-",
           "label": "D = 0.1",
           "datapoints": [
             {
@@ -4029,9 +4031,10 @@
           ]
         },
         {
-          "color": "#ff7f0e",
-          "thickness": 1.5,
-          "linestyle": "-",
+          "type": "line",
+          "line_color": "#ff7f0e",
+          "line_thickness": 1.5,
+          "line_style": "-",
           "label": "D = 0.2",
           "datapoints": [
             {
@@ -6037,9 +6040,10 @@
           ]
         },
         {
-          "color": "#2ca02c",
-          "thickness": 1.5,
-          "linestyle": "-",
+          "type": "line",
+          "line_color": "#2ca02c",
+          "line_thickness": 1.5,
+          "line_style": "-",
           "label": "D = 0.5",
           "datapoints": [
             {
@@ -8045,9 +8049,10 @@
           ]
         },
         {
-          "color": "#d62728",
-          "thickness": 1.5,
-          "linestyle": "-",
+          "type": "line",
+          "line_color": "#d62728",
+          "line_thickness": 1.5,
+          "line_style": "-",
           "label": "D = 1",
           "datapoints": [
             {
@@ -10052,8 +10057,7 @@
             }
           ]
         }
-      ],
-      "points": []
+      ]
     }
   ]
 }

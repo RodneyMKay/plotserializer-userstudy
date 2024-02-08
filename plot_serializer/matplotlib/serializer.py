@@ -19,16 +19,16 @@ from plot_serializer.serializer import Serializer
 from plot_serializer.proxy import Proxy
 from plot_serializer.model import (
     Axis,
-    Bar,
-    BarPlot,
+    Bar2D,
+    BarTrace2D,
     Figure,
-    Line,
+    LineTrace2D,
     PiePlot,
     Plot,
     Plot2D,
+    Point2D,
     Scale,
     Slice,
-    Vec2F,
 )
 
 
@@ -98,68 +98,72 @@ class _AxesProxy(Proxy[MplAxes]):
 
     # FIXME: name_list and height_list cannot only be floats, but also different other types of data
     def bar(
-        self, name_list: Iterable[str], height_list: Iterable[float], **kwargs: Any
+        self, label_list: Iterable[str], height_list: Iterable[float], **kwargs: Any
     ) -> BarContainer:
-        if self._plot is not None:
-            raise NotImplementedError(
-                "PlotSerializer does not yet support adding multiple plots per axes!"
-            )
-
-        bars: List[Bar] = []
+        bars: List[Bar2D] = []
 
         color_list = kwargs.get("color") or []
 
-        for i, name in enumerate(name_list):
+        for i, label in enumerate(label_list):
             height = height_list[i]
             color = color_list[i] if i < len(color_list) else None
 
             bars.append(
-                Bar(name=name, height=height, color=_convert_matplotlib_color(color))
+                Bar2D(y=height, label=label, color=_convert_matplotlib_color(color))
             )
 
-        bar_plot = BarPlot(type="bar", y_axis=Axis(), bars=bars)
-        self._plot = bar_plot
-        return self.delegate.bar(name_list, height_list, **kwargs)
+        trace = BarTrace2D(type="bar", datapoints=bars)
+
+        if self._plot is not None:
+            if not isinstance(self._plot, Plot2D):
+                raise NotImplementedError(
+                    "PlotSerializer does not yet support mixing 2d plots with other plots!"
+                )
+
+            self._plot.traces.append(trace)
+        else:
+            self._plot = Plot2D(type="2d", x_axis=Axis(), y_axis=Axis(), traces=[trace])
+
+        return self.delegate.bar(label_list, height_list, **kwargs)
 
     def plot(self, *args: Any, **kwargs: Any) -> list[Line2D]:
         mpl_lines = self.delegate.plot(*args, **kwargs)
-        lines: List[Line] = []
+        traces: List[LineTrace2D] = []
 
         for mpl_line in mpl_lines:
             xdata = mpl_line.get_xdata()
             ydata = mpl_line.get_ydata()
 
-            points: List[Vec2F] = []
+            points: List[Point2D] = []
 
             for x, y in zip(xdata, ydata):
-                points.append(Vec2F(x=x, y=y))
+                points.append(Point2D(x=x, y=y))
 
             label = mpl_line.get_label()
             color = _convert_matplotlib_color(mpl_line.get_color())
             thickness = mpl_line.get_linewidth()
             linestyle = mpl_line.get_linestyle()
 
-            lines.append(
-                Line(
-                    datapoints=points,
-                    color=color,
-                    thickness=thickness,
+            traces.append(
+                LineTrace2D(
+                    type="line",
+                    line_color=color,
+                    line_thickness=thickness,
+                    line_style=linestyle,
                     label=label,
-                    linestyle=linestyle,
+                    datapoints=points,
                 )
             )
 
         if self._plot is not None:
             if not isinstance(self._plot, Plot2D):
                 raise NotImplementedError(
-                    "PlotSerializer does not yet support mixing line plots with other plots!"
+                    "PlotSerializer does not yet support mixing 2d plots with other plots!"
                 )
 
-            self._plot.lines += lines
+            self._plot.traces += traces
         else:
-            self._plot = Plot2D(
-                type="2d", x_axis=Axis(), y_axis=Axis(), lines=lines, points=[]
-            )
+            self._plot = Plot2D(type="2d", x_axis=Axis(), y_axis=Axis(), traces=traces)
 
         return mpl_lines
 
@@ -169,13 +173,7 @@ class _AxesProxy(Proxy[MplAxes]):
 
         self._plot.title = self.delegate.get_title()
 
-        if isinstance(self._plot, BarPlot):
-            ylabel = self.delegate.get_ylabel()
-            yscale = _convert_matplotlib_scale(self.delegate.get_yscale())
-
-            self._plot.y_axis.label = ylabel
-            self._plot.y_axis.scale = yscale
-        elif isinstance(self._plot, Plot2D):
+        if isinstance(self._plot, Plot2D):
             xlabel = self.delegate.get_xlabel()
             xscale = _convert_matplotlib_scale(self.delegate.get_xscale())
 

@@ -11,11 +11,12 @@
         "label": "",
         "scale": "linear"
       },
-      "lines": [
+      "traces": [
         {
-          "color": "#1f77b4",
-          "thickness": 1.5,
-          "linestyle": "-",
+          "type": "line",
+          "line_color": "#1f77b4",
+          "line_thickness": 1.5,
+          "line_style": "-",
           "label": "_child0",
           "datapoints": [
             {
@@ -60,8 +61,7 @@
             }
           ]
         }
-      ],
-      "points": []
+      ]
     }
   ]
 }
