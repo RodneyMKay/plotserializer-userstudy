@@ -3,28 +3,6 @@ from pydantic import BaseModel, Field
 
 
 # --------------------
-#  Vectors
-
-
-class Vec2F(BaseModel):
-    x: float
-    y: float
-
-
-class Vec3F(BaseModel):
-    x: float
-    y: float
-    z: float
-
-
-class Vec4F(BaseModel):
-    x: float
-    y: float
-    z: float
-    w: float
-
-
-# --------------------
 #  General classes
 
 
@@ -45,17 +23,40 @@ Metadata = Dict[str, MetadataValue]
 
 
 class Point2D(BaseModel):
-    position: Vec2F
+    x: float
+    y: float
     color: Optional[str] = None
     size: Optional[float] = None
 
 
-class Line(BaseModel):
-    color: Optional[str] = None
-    thickness: Optional[float] = None
-    linestyle: Optional[str] = None
+class ScatterTrace2D(BaseModel):
+    type: Literal["scatter"]
+    datapoints: List[Point2D]
+
+
+class LineTrace2D(BaseModel):
+    type: Literal["line"]
+    line_color: Optional[str] = None
+    line_thickness: Optional[float] = None
+    line_style: Optional[str] = None
     label: Optional[str] = None
-    datapoints: List[Vec2F]
+    datapoints: List[Point2D]
+
+
+class Bar2D(BaseModel):
+    y: float
+    label: str
+    color: Optional[str] = None
+
+
+class BarTrace2D(BaseModel):
+    type: Literal["bar"]
+    datapoints: List[Bar2D]
+
+
+Trace2D = Annotated[
+    Union[ScatterTrace2D, LineTrace2D, BarTrace2D], Field(discriminator="type")
+]
 
 
 class Plot2D(BaseModel):
@@ -63,8 +64,7 @@ class Plot2D(BaseModel):
     title: Optional[str] = None
     x_axis: Axis
     y_axis: Axis
-    lines: List[Line]
-    points: List[Point2D]
+    traces: List[Trace2D]
 
 
 # --------------------
@@ -86,27 +86,10 @@ class PiePlot(BaseModel):
 
 
 # --------------------
-# Bar Plot
-
-
-class Bar(BaseModel):
-    name: str
-    height: float
-    color: Optional[str] = None
-
-
-class BarPlot(BaseModel):
-    type: Literal["bar"]
-    title: Optional[str] = None
-    y_axis: Axis
-    bars: List[Bar]
-
-
-# --------------------
 #  Figure
 
 
-Plot = Annotated[Union[PiePlot, Plot2D, BarPlot], Field(discriminator="type")]
+Plot = Annotated[Union[PiePlot, Plot2D], Field(discriminator="type")]
 
 
 class Figure(BaseModel):
