@@ -29,9 +29,24 @@ class Point2D(BaseModel):
     size: Optional[float] = None
 
 
+class Point3D(BaseModel):
+    x: float
+    y: float
+    z: float
+    color: Optional[str] = None
+    size: Optional[float] = None
+
+
 class ScatterTrace2D(BaseModel):
     type: Literal["scatter"]
+    label: Optional[str]
     datapoints: List[Point2D]
+
+
+class ScatterTrace3D(BaseModel):
+    type: Literal["scatter3D"]
+    label: Optional[str]
+    datapoints: List[Point3D]
 
 
 class LineTrace2D(BaseModel):
@@ -58,6 +73,8 @@ Trace2D = Annotated[
     Union[ScatterTrace2D, LineTrace2D, BarTrace2D], Field(discriminator="type")
 ]
 
+Trace3D = Annotated[Union[ScatterTrace3D], Field(discriminator="type")]
+
 
 class Plot2D(BaseModel):
     type: Literal["2d"]
@@ -65,6 +82,15 @@ class Plot2D(BaseModel):
     x_axis: Axis
     y_axis: Axis
     traces: List[Trace2D]
+
+
+class Plot3D(BaseModel):
+    type: Literal["3d"]
+    title: Optional[str] = None
+    x_axis: Axis
+    y_axis: Axis
+    z_axis: Axis
+    traces: List[Trace3D]
 
 
 # --------------------
@@ -89,7 +115,7 @@ class PiePlot(BaseModel):
 #  Figure
 
 
-Plot = Annotated[Union[PiePlot, Plot2D], Field(discriminator="type")]
+Plot = Annotated[Union[PiePlot, Plot2D, Plot3D], Field(discriminator="type")]
 
 
 class Figure(BaseModel):
