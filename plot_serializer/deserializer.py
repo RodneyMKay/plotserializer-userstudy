@@ -4,7 +4,6 @@ import os
 from plot_serializer.model import (
     Figure,
     PiePlot,
-    Plot,
     Plot2D,
     LineTrace2D,
     BarTrace2D,
@@ -101,23 +100,20 @@ class Deserializer:
     def _parse_BarTrace2D(self, trace: BarTrace2D, ax: MplAxes) -> None:
         label = []
         y = []
-        color = []
+        color: list[str] = []
         for bar in trace.datapoints:
             label.append(bar.label)
             y.append(bar.y)
             if bar.color is not None:
                 color.append(bar.color)
-        if len(color) == 0:
-            ax.bar(label, y)
-        else:
-            ax.bar(label, y, color=color)
+        ax.bar(label, y, color=color if color != [] else None)
 
     def _parse_PiePlot(self, p: PiePlot, ax: MplAxes) -> None:
         size = []
         radius = []
-        offset = []
-        name = []
-        color = []
+        offset: list[float] = []
+        name: list[str] = []
+        color: list[str] = []
 
         for slice in p.slices:
             size.append(slice.size)
@@ -129,15 +125,9 @@ class Deserializer:
                 offset.append(slice.offset)
             if slice.color is not None:
                 color.append(slice.color)
-
-        # FIXME: this works perfectly fine and is shortest in code but gets red_lines
-        params = [name, radius, offset, color]
-        params_filtered = []
-        for par in params:  # replaces empty lists with
-            params_filtered.append(par if par != [] else None)
         ax.pie(
             size,
-            labels=params_filtered[0],
-            colors=params_filtered[3],
-            explode=params_filtered[2],
+            labels=name if name != [] else None,
+            colors=color if color != [] else None,
+            explode=offset if offset != [] else None,
         )
