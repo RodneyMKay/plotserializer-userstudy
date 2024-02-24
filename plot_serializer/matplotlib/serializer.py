@@ -168,6 +168,11 @@ class _AxesProxy(Proxy[MplAxes]):
             )
 
         if self._plot is not None:
+            if not isinstance(self._plot, Plot2D):
+                raise NotImplementedError(
+                    "PlotSerializer does not yet support mixing 2d plots with other plots!"
+                )
+
             self._plot.traces += traces
         else:
             self._plot = Plot2D(type="2d", x_axis=Axis(), y_axis=Axis(), traces=traces)
