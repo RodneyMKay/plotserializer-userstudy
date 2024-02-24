@@ -230,7 +230,6 @@ class _AxesProxy(Proxy[MplAxes]):
             self._plot.traces += trace
         else:
             self._plot = Plot2D(type="2d", x_axis=Axis(), y_axis=Axis(), traces=trace)
-            print(self._plot.traces)
         return path
 
     def _on_collect(self) -> None:
