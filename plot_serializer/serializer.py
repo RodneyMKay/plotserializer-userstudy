@@ -33,6 +33,7 @@ class Serializer(ABC):
         """
         self._figure.metadata[name] = value
 
+    # FIXME: if to_json is used twice or write_to_json the output it producec is wierd, maybe add warning!!!
     def serialized_figure(self) -> Figure:
         """
         Returns a figure object that contains all the data that has been captured
