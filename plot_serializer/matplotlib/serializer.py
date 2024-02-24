@@ -168,6 +168,10 @@ class _AxesProxy(Proxy[MplAxes]):
             )
 
         if self._plot is not None:
+            if not isinstance(self._plot, Plot2D):
+                raise NotImplementedError(
+                    "PlotSerializer does not yet support mixing 2d plots with other plots!"
+                )
             self._plot.traces += traces
         else:
             self._plot = Plot2D(type="2d", x_axis=Axis(), y_axis=Axis(), traces=traces)
@@ -219,6 +223,10 @@ class _AxesProxy(Proxy[MplAxes]):
         trace.append(ScatterTrace2D(type="scatter", label=label, datapoints=datapoints))
 
         if self._plot is not None:
+            if not isinstance(self._plot, Plot2D):
+                raise NotImplementedError(
+                    "PlotSerializer does not yet support mixing 2d plots with other plots!"
+                )
             self._plot.traces += trace
         else:
             self._plot = Plot2D(type="2d", x_axis=Axis(), y_axis=Axis(), traces=trace)
@@ -244,6 +252,25 @@ class _AxesProxy(Proxy[MplAxes]):
             self._plot.y_axis.label = ylabel
             self._plot.y_axis.scale = yscale
 
+        elif isinstance(self._plot, Plot3D):
+            xlabel = self.delegate.get_xlabel()
+            xscale = _convert_matplotlib_scale(self.delegate.get_xscale())
+
+            self._plot.x_axis.label = xlabel
+            self._plot.x_axis.scale = xscale
+
+            ylabel = self.delegate.get_ylabel()
+            yscale = _convert_matplotlib_scale(self.delegate.get_yscale())
+
+            self._plot.y_axis.label = ylabel
+            self._plot.y_axis.scale = yscale
+
+            zlabel = self.delegate.get_zlabel()
+            zscale = _convert_matplotlib_scale(self.delegate.get_zscale())
+
+            self._plot.z_axis.label = zlabel
+            self._plot.z_axis.scale = zscale
+
         self._figure.plots.append(self._plot)
 
 
@@ -256,74 +283,76 @@ class _AxesProxy3D(Proxy[MplAxes3D]):
         self._serializer = serializer
         self._plot: Optional[Plot] = None
 
-    # def scatter(
-    #     self,
-    #     x_values: Iterable[float],
-    #     y_values: Iterable[float],
-    #     z_values: Iterable[float],
-    #     enable_colors: bool = False,
-    #     enable_sizes: bool = False,
-    #     *args: Any,
-    #     **kwargs: Any,
-    # ) -> Path3DCollection:
-    #     color_list = kwargs.get("c") or []
-    #     sizes_list = kwargs.get("s") or []
-    #     cmap = kwargs.get("cmap") or "viridis"
-    #     norm = kwargs.get("norm") or "linear"
+    def scatter(
+        self,
+        x_values: Iterable[float],
+        y_values: Iterable[float],
+        z_values: Iterable[float],
+        enable_colors: bool = False,
+        enable_sizes: bool = False,
+        *args: Any,
+        **kwargs: Any,
+    ) -> Path3DCollection:
+        color_list = kwargs.get("c") or []
+        sizes_list = kwargs.get("s") or []
+        cmap = kwargs.get("cmap") or "viridis"
+        norm = kwargs.get("norm") or "linear"
 
-    #     if not s:
-    #         enable_sizes = False
-    #     if not c:
-    #         enable_colors = False
+        if not s:
+            enable_sizes = False
+        if not c:
+            enable_colors = False
 
-    #     if not (len(x_values) == len(y_values) == len(z_values)):
-    #         raise ValueError(
-    #             "the x,y,z arrays do not contain the same amount of elements"
-    #         )
-    #     trace: List[ScatterTrace3D] = []
-    #     datapoints: List[Point3D] = []
+        if not (len(x_values) == len(y_values) == len(z_values)):
+            raise ValueError(
+                "the x,y,z arrays do not contain the same amount of elements"
+            )
+        trace: List[ScatterTrace3D] = []
+        datapoints: List[Point3D] = []
 
-    #     sizes: List[float] = []
-    #     if enable_sizes:
-    #         if not (len(x_values) == len(sizes_list)):
-    #             if not (len(sizes_list) - 1):
-    #                 sizes = [sizes_list[0] for i in range(len(x_values))]
-    #             else:
-    #                 raise ValueError(
-    #                     "sizes list does contain more than one element while not being as long as the x_values array"
-    #                 )
-    #         else:
-    #             sizes = sizes_list
+        sizes: List[float] = []
+        if enable_sizes:
+            if not (len(x_values) == len(sizes_list)):
+                if not enable_sizes:
+                    sizes = [None] * len(x_values)
+                if not (len(sizes_list) - 1):
+                    sizes = [sizes_list[0] for i in range(len(x_values))]
+                else:
+                    raise ValueError(
+                        "sizes list does contain more than one element while not being as long as the x_values array"
+                    )
+            else:
+                sizes = sizes_list
 
-    #     colors: List[str] = []
-    #     if enable_colors:
-    #         scalar_mappable = cm.ScalarMappable(norm=norm, cmap=cmap)
-    #         colors = self._get_colors_scatter(
-    #             color_list, scalar_mappable, len(x_values)
-    #         )
-    #     else:
-    #         colors = [None] * len(x_values)
+        colors: List[str] = []
+        if enable_colors:
+            scalar_mappable = cm.ScalarMappable(norm=norm, cmap=cmap)
+            colors = self._get_colors_scatter(
+                color_list, scalar_mappable, len(x_values)
+            )
+        else:
+            colors = [None] * len(x_values)
 
-    #     for i in range(len(x_values)):
-    #         c = colors[i]
-    #         s = sizes[i] if enable_sizes else None
-    #         datapoints.append(
-    #             Point3D(x=x_values[i], y=y_values[i], z=z_values, color=c, size=s)
-    #         )
+        for i in range(len(x_values)):
+            c = colors[i]
+            s = sizes[i] if enable_sizes else None
+            datapoints.append(
+                Point3D(x=x_values[i], y=y_values[i], z=z_values, color=c, size=s)
+            )
 
-    #     path = self.delegate.scatter(x_values, y_values, z_values, *args, **kwargs)
-    #     label = str(path.get_label())
+        path = self.delegate.scatter(x_values, y_values, z_values, *args, **kwargs)
+        label = str(path.get_label())
 
-    #     trace.append(ScatterTrace3D(label=label, datapoints=datapoints))
+        trace.append(ScatterTrace3D(label=label, datapoints=datapoints))
 
-    #     if self._plot is not None:
-    #         self._plot.traces += trace
-    #     else:
-    #         self._plot = Plot3D(
-    #             type="2d", x_axis=Axis(), y_axis=Axis(), z_axis=Axis(), traces=trace
-    #         )
+        if self._plot is not None:
+            self._plot.traces += trace
+        else:
+            self._plot = Plot3D(
+                type="2d", x_axis=Axis(), y_axis=Axis(), z_axis=Axis(), traces=trace
+            )
 
-    #     return path
+        return path
 
     def _get_colors_scatter(
         color_list: Any, scalar_mappable: cm.ScalarMappable, length: int
@@ -358,7 +387,7 @@ class _AxesProxy3D(Proxy[MplAxes3D]):
             raise NotImplementedError(
                 "Your color is not supported by PlotSerializer, see Documentation for more detail"
             )
-        if not (len(colors) == len(length)):
+        if not (len(colors) == length):
             if not (len(colors) - 1):
                 colors = [colors[0] for i in range(length)]
             else:
@@ -391,6 +420,19 @@ class _AxesProxy3D(Proxy[MplAxes3D]):
 
             self._plot.z_axis.label = zlabel
             self._plot.z_axis.scale = zscale
+
+        elif isinstance(self._plot, Plot2D):
+            xlabel = self.delegate.get_xlabel()
+            xscale = _convert_matplotlib_scale(self.delegate.get_xscale())
+
+            self._plot.x_axis.label = xlabel
+            self._plot.x_axis.scale = xscale
+
+            ylabel = self.delegate.get_ylabel()
+            yscale = _convert_matplotlib_scale(self.delegate.get_yscale())
+
+            self._plot.y_axis.label = ylabel
+            self._plot.y_axis.scale = yscale
 
         self._figure.plots.append(self._plot)
 

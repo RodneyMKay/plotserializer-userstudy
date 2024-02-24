@@ -61,7 +61,7 @@
 #     sizes = [1, 5, 10, 20, 30]
 
 #     _, ax = serializer.subplots()
-#     ax.scatter(x, y, c=color, s=sizes enable_colors=True)
+#     ax.scatter(x, y, c=color, s=sizes, enable_colors=True)
 
 #     json_string = serializer.to_json()
 #     output = json.loads(json_string)
@@ -75,11 +75,11 @@
 
 #     x = [1, 2, 3, 4, 3]
 #     y = [2, 1.5, 5, 0, 4]
-#     color = [1,0.5,3,0.2,0.1]
+#     color = [1, 0.5, 3, 0.2, 0.1]
 #     sizes = [1, 5, 10, 20, 30]
 
 #     _, ax = serializer.subplots()
-#     ax.scatter(x, y, c=color,s=sizes, enable_colors=False,enable_sizes=True)
+#     ax.scatter(x, y, c=color, s=sizes, enable_colors=False, enable_sizes=True)
 
 #     json_string = serializer.to_json()
 #     output = json.loads(json_string)
