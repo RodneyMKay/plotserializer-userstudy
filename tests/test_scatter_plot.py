@@ -47,7 +47,7 @@ def test_sizes_enabled_false() -> None:
 
     json_string = serializer.to_json()
     output = json.loads(json_string)
-    expected = json.loads(read_plot("scatter_plot_sizes_diabled"))
+    expected = json.loads(read_plot("scatter_plot_sizes_disabled"))
 
     assert output == expected
 
