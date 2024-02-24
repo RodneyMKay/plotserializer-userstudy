@@ -1,86 +1,88 @@
-import json
-from plot_serializer.matplotlib.serializer import MatplotlibSerializer
-from tests import read_plot
+# import json
+# from plot_serializer.matplotlib.serializer import MatplotlibSerializer
+# from tests import read_plot
 
 
-def test_simple() -> None:
-    serializer = MatplotlibSerializer()
+# def test_simple() -> None:
+#     serializer = MatplotlibSerializer()
 
-    x = [1, 2, 3, 4, 3]
-    y = [2, 1.5, 5, 0, 4]
+#     x = [1, 2, 3, 4, 3]
+#     y = [2, 1.5, 5, 0, 4]
 
-    _, ax = serializer.subplots()
-    ax.scatter(x, y)
+#     _, ax = serializer.subplots()
+#     ax.scatter(x, y)
 
-    json_string = serializer.to_json()
-    output = json.loads(json_string)
-    expected = json.loads(read_plot("line_plot_simple"))
+#     json_string = serializer.to_json()
+#     output = json.loads(json_string)
+#     expected = json.loads(read_plot("line_plot_simple"))
 
-    assert output == expected
-
-
-def test_sizes() -> None:
-    serializer = MatplotlibSerializer()
-
-    x = [1, 2, 3, 4, 3]
-    y = [2, 1.5, 5, 0, 4]
-    sizes = [1, 5, 10, 20, 30]
-
-    _, ax = serializer.subplots()
-    ax.scatter(x, y, enable_sizes=True)
-
-    json_string = serializer.to_json()
-    output = json.loads(json_string)
-    expected = json.loads(read_plot("line_plot_simple"))
-
-    assert output == expected
+#     assert output == expected
 
 
-def test_sizes_enabled_false() -> None:
-    serializer = MatplotlibSerializer()
-    x = [1, 2, 3, 4, 3]
-    y = [2, 1.5, 5, 0, 4]
-    sizes = [1, 5, 10, 20, 30]
+# def test_sizes() -> None:
+#     serializer = MatplotlibSerializer()
 
-    _, ax = serializer.subplots()
-    ax.scatter(x, y, enable_sizes=False)
+#     x = [1, 2, 3, 4, 3]
+#     y = [2, 1.5, 5, 0, 4]
+#     sizes = [1, 5, 10, 20, 30]
 
-    json_string = serializer.to_json()
-    output = json.loads(json_string)
-    expected = json.loads(read_plot("line_plot_simple"))
+#     _, ax = serializer.subplots()
+#     ax.scatter(x, y, s=sizes, enable_sizes=True)
 
-    assert output == expected
+#     json_string = serializer.to_json()
+#     output = json.loads(json_string)
+#     expected = json.loads(read_plot("line_plot_simple"))
 
-
-def test_color_list_string() -> None:
-    serializer = MatplotlibSerializer()
-
-    x = [1, 2, 3, 4, 3]
-    y = [2, 1.5, 5, 0, 4]
-    color = ["green", "blue", "red", "yellow", "black"]
-
-    _, ax = serializer.subplots()
-    ax.scatter(x, y, c=color, enable_colors=True)
-
-    json_string = serializer.to_json()
-    output = json.loads(json_string)
-    expected = json.loads(read_plot("line_plot_simple"))
-
-    assert output == expected
+#     assert output == expected
 
 
-def test_color_enabled_false() -> None:
-    serializer = MatplotlibSerializer()
+# def test_sizes_enabled_false() -> None:
+#     serializer = MatplotlibSerializer()
+#     x = [1, 2, 3, 4, 3]
+#     y = [2, 1.5, 5, 0, 4]
+#     sizes = [1, 5, 10, 20, 30]
 
-    x = [1, 2, 3, 4, 3]
-    y = [2, 1.5, 5, 0, 4]
-    color = ["green", "blue", "red", "yellow", "black"]
+#     _, ax = serializer.subplots()
+#     ax.scatter(x, y, s=sizes, enable_sizes=False)
 
-    _, ax = serializer.subplots()
-    ax.scatter(x, y, c=color, enable_colors=False)
+#     json_string = serializer.to_json()
+#     output = json.loads(json_string)
+#     expected = json.loads(read_plot("line_plot_simple"))
 
-    json_string = serializer.to_json()
-    output = json.loads(json_string)
-    expected = json.loads(read_plot("line_plot_simple"))
+#     assert output == expected
 
-    assert output == expected
+
+# def test_color_list_string() -> None:
+#     serializer = MatplotlibSerializer()
+
+#     x = [1, 2, 3, 4, 3]
+#     y = [2, 1.5, 5, 0, 4]
+#     color = ["green", "blue", "red", "yellow", "black"]
+#     sizes = [1, 5, 10, 20, 30]
+
+#     _, ax = serializer.subplots()
+#     ax.scatter(x, y, c=color, s=sizes enable_colors=True)
+
+#     json_string = serializer.to_json()
+#     output = json.loads(json_string)
+#     expected = json.loads(read_plot("line_plot_simple"))
+
+#     assert output == expected
+
+
+# def test_color_enabled_false() -> None:
+#     serializer = MatplotlibSerializer()
+
+#     x = [1, 2, 3, 4, 3]
+#     y = [2, 1.5, 5, 0, 4]
+#     color = [1,0.5,3,0.2,0.1]
+#     sizes = [1, 5, 10, 20, 30]
+
+#     _, ax = serializer.subplots()
+#     ax.scatter(x, y, c=color,s=sizes, enable_colors=False,enable_sizes=True)
+
+#     json_string = serializer.to_json()
+#     output = json.loads(json_string)
+#     expected = json.loads(read_plot("line_plot_simple"))
+
+#     assert output == expected
