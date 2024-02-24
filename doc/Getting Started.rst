@@ -84,6 +84,15 @@ We can also write the plot to a file directly:
 
     serializer.write_json_file("test_plot.json")
 
+
+What does not get serialized?
+--------------------
+FIXME: Nochmal überarbeiten. AAAAAAAAAAAAAAAAAAAAAAAAAAAA
+PlotSerializer always reads out the data and color. Further supported parameters for specific types are explained in this documentation. FIXME: Add those pages!
+Parameters which are used to make the diagram more appealing are not read out by PlotSerializer. Instead they might distort the data.
+Also beware of modifying anywhere else besides the main method, such as plot(),pie(),scatter(). This will not be caught upon by PlotSerializer and the change will be ignored.
+We recommend to run PlotSerializer first with your raw data and simply add the all stylish choices for the plot later.
+
 Deserializing a plot from JSON
 ------------------------------
 
