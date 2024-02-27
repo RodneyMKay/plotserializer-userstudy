@@ -208,7 +208,11 @@ class _AxesProxy(Proxy[MplAxes]):
             )
 
         for index, vertex in enumerate(verteces):
-            color = mcolors.to_hex(colors[index]) if enable_colors else None
+            color = (
+                mcolors.to_hex(colors[index], keep_alpha=True)
+                if enable_colors
+                else None
+            )
             size = sizes[index] if enable_sizes else None
 
             datapoints.append(
@@ -296,11 +300,20 @@ class _AxesProxy3D(Proxy[MplAxes3D]):
         sizes_list = kwargs.get("s") or []
         cmap = kwargs.get("cmap") or "viridis"
         norm = kwargs.get("norm") or "linear"
-
-        if not s:
+        if not x_values or not y_values or not z_values:
+            raise ValueError("one of your x,y,z data is missing")
+        if isinstance(x_values, float) or isinstance(x_values, int):
+            x_values = [x_values]
+        if isinstance(y_values, float) or isinstance(y_values, int):
+            y_values = [y_values]
+        if isinstance(z_values, float) or isinstance(z_values, int):
+            z_values = [z_values]
+        if not sizes_list:
             enable_sizes = False
-        if not c:
+        if not color_list:
             enable_colors = False
+        if isinstance(sizes_list, float) or isinstance(sizes_list, int):
+            sizes_list = [sizes_list]
 
         if not (len(x_values) == len(y_values) == len(z_values)):
             raise ValueError(
@@ -312,8 +325,6 @@ class _AxesProxy3D(Proxy[MplAxes3D]):
         sizes: List[float] = []
         if enable_sizes:
             if not (len(x_values) == len(sizes_list)):
-                if not enable_sizes:
-                    sizes = [None] * len(x_values)
                 if not (len(sizes_list) - 1):
                     sizes = [sizes_list[0] for i in range(len(x_values))]
                 else:
@@ -322,6 +333,8 @@ class _AxesProxy3D(Proxy[MplAxes3D]):
                     )
             else:
                 sizes = sizes_list
+        else:
+            sizes_list = [None] * len(x_values)
 
         colors: List[str] = []
         if enable_colors:
@@ -336,25 +349,27 @@ class _AxesProxy3D(Proxy[MplAxes3D]):
             c = colors[i]
             s = sizes[i] if enable_sizes else None
             datapoints.append(
-                Point3D(x=x_values[i], y=y_values[i], z=z_values, color=c, size=s)
+                Point3D(x=x_values[i], y=y_values[i], z=z_values[i], color=c, size=s)
             )
 
         path = self.delegate.scatter(x_values, y_values, z_values, *args, **kwargs)
         label = str(path.get_label())
 
-        trace.append(ScatterTrace3D(label=label, datapoints=datapoints))
+        trace.append(
+            ScatterTrace3D(type="scatter3D", label=label, datapoints=datapoints)
+        )
 
         if self._plot is not None:
             self._plot.traces += trace
         else:
             self._plot = Plot3D(
-                type="2d", x_axis=Axis(), y_axis=Axis(), z_axis=Axis(), traces=trace
+                type="3d", x_axis=Axis(), y_axis=Axis(), z_axis=Axis(), traces=trace
             )
 
         return path
 
     def _get_colors_scatter(
-        color_list: Any, scalar_mappable: cm.ScalarMappable, length: int
+        self, color_list: Any, scalar_mappable: cm.ScalarMappable, length: int
     ) -> List[str]:
         colors: List[str] = []
         color_type = type(color_list)
@@ -365,23 +380,20 @@ class _AxesProxy3D(Proxy[MplAxes3D]):
             colors.append(color_list)
             colors = [mcolors.to_hex(c, keep_alpha=True) for c in color_list]
         elif color_type is list and (
-            all(
-                isinstance(item, tuple) and len(item) == 3
-                for item in color_list
-                or all(
-                    isinstance(item, tuple) and len(item) == 4 for item in color_list
-                )
-            )
+            all(isinstance(item, tuple) and len(item) == 3 for item in color_list)
+            or all(isinstance(item, tuple) and len(item) == 4 for item in color_list)
         ):
-            hex_values = [mcolors.to_hex(c) for c in color_list]
-            colors.append(hex_values)
-        elif color_type in (int, float) or (
-            (color_type is list or isinstance(color_list, np.ndarray))
-            and all(isinstance(item, (int, float)) for item in color_list)
+            hex_values = [mcolors.to_hex(c, keep_alpha=True) for c in color_list]
+            colors.extend(hex_values)
+        elif (color_type is list or isinstance(color_list, np.ndarray)) and all(
+            isinstance(item, (int, float)) for item in color_list
         ):
-            rgba_tuples = [scalar_mappable.to_rgba(c) for c in color_list]
-            hex_values = [mcolors.to_hex(rgba_value) for rgba_value in rgba_tuples]
-            colors.append(hex_values)
+            rgba_tuples = scalar_mappable.to_rgba(color_list)
+            hex_values = [
+                mcolors.to_hex(rgba_value, keep_alpha=True)
+                for rgba_value in rgba_tuples
+            ]
+            colors.extend(hex_values)
         else:
             raise NotImplementedError(
                 "Your color is not supported by PlotSerializer, see Documentation for more detail"

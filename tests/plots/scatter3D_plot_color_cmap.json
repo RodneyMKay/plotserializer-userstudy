@@ -1,45 +1,54 @@
 {
   "plots": [
     {
-      "type": "2d",
-      "title": "",
+      "type": "3d",
+      "title": "via cividis cmap",
       "x_axis": {
-        "label": "",
+        "label": "testX",
         "scale": "linear"
       },
       "y_axis": {
-        "label": "",
+        "label": "testY",
+        "scale": "linear"
+      },
+      "z_axis": {
+        "label": "testZ",
         "scale": "linear"
       },
       "traces": [
         {
-          "type": "scatter",
+          "type": "scatter3D",
           "label": "_child0",
           "datapoints": [
             {
               "x": 1.0,
               "y": 2.0,
-              "color": "#008000ff"
+              "z": 3.0,
+              "color": "#00224eff"
             },
             {
               "x": 2.0,
               "y": 1.5,
-              "color": "#0000ffff"
+              "z": 2.0,
+              "color": "#575d6dff"
             },
             {
               "x": 3.0,
               "y": 5.0,
-              "color": "#ff0000ff"
+              "z": 1.0,
+              "color": "#8a8678ff"
             },
             {
               "x": 4.0,
               "y": 0.0,
-              "color": "#ffff00ff"
+              "z": 0.5,
+              "color": "#c3b369ff"
             },
             {
               "x": 3.0,
               "y": 4.0,
-              "color": "#000000ff"
+              "z": 2.0,
+              "color": "#fee838ff"
             }
           ]
         }
