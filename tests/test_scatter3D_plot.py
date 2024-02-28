@@ -2,7 +2,6 @@ import json
 from plot_serializer.matplotlib.serializer import MatplotlibSerializer
 from tests import read_plot
 from mpl_toolkits.mplot3d.axes3d import Axes3D as MplAxes3D
-from plot_serializer import Proxy
 from plot_serializer import _AxesProxy3D
 
 
