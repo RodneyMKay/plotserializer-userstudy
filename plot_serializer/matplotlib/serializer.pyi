@@ -11,9 +11,9 @@ from typing import (
 
 from matplotlib.figure import Figure as MplFigure
 from matplotlib.axes import Axes as MplAxes
+from mpl_toolkits.mplot3d.axes3d import Axes3D as MplAxes3D
 
 from plot_serializer.serializer import Serializer
-
 
 class MatplotlibSerializer(Serializer):
     # Fancy way of properly type hinting the subplots method...
@@ -31,8 +31,7 @@ class MatplotlibSerializer(Serializer):
         subplot_kw: Optional[Dict[str, Any]] = None,
         gridspec_kw: Optional[Dict[str, Any]] = None,
         **fig_kw: Any,
-    ) -> Tuple[MplFigure, MplAxes]: ...
-
+    ) -> Tuple[MplFigure, Union[MplAxes, MplAxes3D]]: ...
     @overload
     def subplots(
         self,
