@@ -92,7 +92,7 @@ PlotSerializer always reads out the data and colors. For some plots you explicit
 Further supported parameters for the specific diagram type are explained in this documentation. FIXME: Add those pages!
 Parameters which are used to make the diagram more appealing are not extracted by PlotSerializer. Instead they might distort the data in the JSON file.
 Because of this we recommend to run PlotSerializer first with your raw data, run it once, and simply add the all stylish choices for the plot after that.
-Similarly beware of modifying anywhere else besides the main method, such as plot(),pie(),scatter(). This will not be caught upon by PlotSerializer and the change will be ignored.
+Similarly beware of modifying anywhere else besides the main methods, such as plot,pie,scatter. This will not be caught upon by PlotSerializer and the change will be ignored.
 
 
 Deserializing a plot from JSON
