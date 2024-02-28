@@ -458,7 +458,9 @@ class MatplotlibSerializer(Serializer):
     """
 
     # Question: changed the types to Any here, can we specify axes = Union[3daxes,axes...] and axesproxies = Union[...]?
-    def _create_axes_proxy(self, mpl_axes: Any) -> Any:
+    def _create_axes_proxy(
+        self, mpl_axes: Union[MplAxes3D, MplAxes]
+    ) -> Union[_AxesProxy, _AxesProxy3D]:
         proxy: Any
         if isinstance(mpl_axes, MplAxes3D):
             proxy = _AxesProxy3D(mpl_axes, self._figure, self)
@@ -476,7 +478,7 @@ class MatplotlibSerializer(Serializer):
         self,
         *args: Any,
         **kwargs: Any,
-    ) -> Tuple[MplFigure, Union[MplAxes, Any]]:
+    ) -> Tuple[MplFigure, Union[MplAxes, MplAxes3D, Any]]:
         figure, axes = matplotlib.pyplot.subplots(*args, **kwargs)
 
         new_axes: Any
