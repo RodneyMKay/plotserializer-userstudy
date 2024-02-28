@@ -13,8 +13,8 @@ def test_simple() -> None:
     z = [3, 2, 1, 0.5, 2]
 
     __, ax = serializer.subplots(subplot_kw={"projection": "3d"})
-    assert isinstance(ax.delegate, MplAxes3D)
     assert isinstance(ax, _AxesProxy3D)
+    assert isinstance(ax.delegate, MplAxes3D)
     ax.scatter(x, y, z)
 
     json_string = serializer.to_json()
@@ -33,8 +33,8 @@ def test_size() -> None:
     sizes = 5
 
     __, ax = serializer.subplots(subplot_kw={"projection": "3d"})
-    assert isinstance(ax.delegate, MplAxes3D)
     assert isinstance(ax, _AxesProxy3D)
+    assert isinstance(ax.delegate, MplAxes3D)
     ax.scatter(x, y, z, s=sizes, enable_sizes=True)
 
     json_string = serializer.to_json()
@@ -53,8 +53,8 @@ def test_sizes_list() -> None:
     sizes = [1, 5, 10, 20, 30]
 
     __, ax = serializer.subplots(subplot_kw={"projection": "3d"})
-    assert isinstance(ax.delegate, MplAxes3D)
     assert isinstance(ax, _AxesProxy3D)
+    assert isinstance(ax.delegate, MplAxes3D)
     ax.scatter(x, y, z, s=sizes, enable_sizes=True)
 
     json_string = serializer.to_json()
@@ -73,8 +73,8 @@ def test_color_string() -> None:
     color = "green"
 
     __, ax = serializer.subplots(subplot_kw={"projection": "3d"})
-    assert isinstance(ax.delegate, MplAxes3D)
     assert isinstance(ax, _AxesProxy3D)
+    assert isinstance(ax.delegate, MplAxes3D)
     ax.scatter(x, y, z, c=color, enable_colors=True)
 
     json_string = serializer.to_json()
@@ -93,8 +93,8 @@ def test_color_list_string() -> None:
     color = ["green", "blue", "red", "yellow", "black"]
 
     __, ax = serializer.subplots(subplot_kw={"projection": "3d"})
-    assert isinstance(ax.delegate, MplAxes3D)
     assert isinstance(ax, _AxesProxy3D)
+    assert isinstance(ax.delegate, MplAxes3D)
     ax.scatter(x, y, z, c=color, enable_colors=True)
 
     json_string = serializer.to_json()
@@ -113,8 +113,8 @@ def test_color_hex() -> None:
     color = ["#008000ff", "#0000ffff", "#ff0000ff", "#ffff00ff", "#000000ff"]
 
     __, ax = serializer.subplots(subplot_kw={"projection": "3d"})
-    assert isinstance(ax.delegate, MplAxes3D)
     assert isinstance(ax, _AxesProxy3D)
+    assert isinstance(ax.delegate, MplAxes3D)
     ax.scatter(x, y, z, c=color, enable_colors=True)
 
     json_string = serializer.to_json()
@@ -139,8 +139,8 @@ def test_color_rgb() -> None:
     ]
 
     __, ax = serializer.subplots(subplot_kw={"projection": "3d"})
-    assert isinstance(ax.delegate, MplAxes3D)
     assert isinstance(ax, _AxesProxy3D)
+    assert isinstance(ax.delegate, MplAxes3D)
     ax.scatter(x, y, z, c=color, enable_colors=True)
 
     json_string = serializer.to_json()
@@ -159,8 +159,8 @@ def test_color_cmap() -> None:
     color = [0.1, 0.4, 0.6, 0.8, 1]
 
     __, ax = serializer.subplots(subplot_kw={"projection": "3d"})
-    assert isinstance(ax.delegate, MplAxes3D)
     assert isinstance(ax, _AxesProxy3D)
+    assert isinstance(ax.delegate, MplAxes3D)
     ax.scatter(x, y, z, c=color, cmap="cividis", enable_colors=True)
     ax.set_title("via cividis cmap")
     ax.set_xlabel("testX")
