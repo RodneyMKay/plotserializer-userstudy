@@ -87,7 +87,7 @@ We can also write the plot to a file directly:
 
 
 What does, what does not get serialized?
----------------------------
+----------------------------------------
 Nochmal überarbeiten. AAAAAAAAAAAAAAAAAAAAAAAAAAAA
 PlotSerializer always reads out the data and colors. For some plots you explicitely have to ask for the colors to be shown inside the JSON.
 Further supported parameters for the specific diagram type are explained in this documentation. Add those pages!
