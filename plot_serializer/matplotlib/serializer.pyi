@@ -11,7 +11,6 @@ from typing import (
 
 from matplotlib.figure import Figure as MplFigure
 from matplotlib.axes import Axes as MplAxes
-from mpl_toolkits.mplot3d.axes3d import Axes3D as MplAxes3D
 
 from plot_serializer.serializer import Serializer
 
@@ -28,10 +27,10 @@ class MatplotlibSerializer(Serializer):
         squeeze: bool = True,
         width_ratios: Optional[Sequence[float]] = None,
         height_ratios: Optional[Sequence[float]] = None,
-        subplot_kw: Optional[Dict[str, Any]] = None,
+        subplot_kw: None = None,
         gridspec_kw: Optional[Dict[str, Any]] = None,
         **fig_kw: Any,
-    ) -> Tuple[MplFigure, Union[MplAxes, MplAxes3D]]: ...
+    ) -> Tuple[MplFigure, MplAxes]: ...
     @overload
     def subplots(
         self,
