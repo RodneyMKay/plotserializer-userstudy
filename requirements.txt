@@ -21,3 +21,6 @@ mypy
 
 # Unit testing
 pytest
+
+# Jupyter for userstudy
+jupyter
