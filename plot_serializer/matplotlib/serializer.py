@@ -188,6 +188,15 @@ class _AxesProxy(Proxy[MplAxes]):
         **kwargs: Any,
     ) -> PathCollection:
         path = self.delegate.scatter(x_values, y_values, *args, **kwargs)
+        color_list = kwargs.get("c") or []
+        sizes_list = kwargs.get("s") or []
+        enable_colors: bool = True
+        enable_sizes: bool = True
+        if not color_list:
+            enable_colors = False
+        if not sizes_list:
+            enable_sizes = False
+
         trace: List[ScatterTrace2D] = []
         label = str(path.get_label())
         datapoints: List[Point2D] = []
@@ -291,8 +300,6 @@ class _AxesProxy3D(Proxy[MplAxes3D]):
         x_values: Iterable[float],
         y_values: Iterable[float],
         z_values: Iterable[float],
-        enable_colors: bool = False,
-        enable_sizes: bool = False,
         *args: Any,
         **kwargs: Any,
     ) -> Path3DCollection:
@@ -300,6 +307,9 @@ class _AxesProxy3D(Proxy[MplAxes3D]):
         sizes_list = kwargs.get("s") or []
         cmap = kwargs.get("cmap") or "viridis"
         norm = kwargs.get("norm") or "linear"
+        enable_colors: bool = True
+        enable_sizes: bool = True
+
         if not x_values or not y_values or not z_values:
             raise ValueError("one of your x,y,z data is missing")
         if isinstance(x_values, float) or isinstance(x_values, int):
@@ -334,7 +344,7 @@ class _AxesProxy3D(Proxy[MplAxes3D]):
             else:
                 sizes = sizes_list
         else:
-            sizes_list = [None] * len(x_values)
+            sizes = [None] * len(x_values)
 
         colors: List[str] = []
         if enable_colors:
@@ -347,7 +357,7 @@ class _AxesProxy3D(Proxy[MplAxes3D]):
 
         for i in range(len(x_values)):
             c = colors[i]
-            s = sizes[i] if enable_sizes else None
+            s = sizes[i]
             datapoints.append(
                 Point3D(x=x_values[i], y=y_values[i], z=z_values[i], color=c, size=s)
             )
@@ -457,7 +467,6 @@ class MatplotlibSerializer(Serializer):
         Serializer (_type_): Parent class
     """
 
-    # Question: changed the types to Any here, can we specify axes = Union[3daxes,axes...] and axesproxies = Union[...]?
     def _create_axes_proxy(
         self, mpl_axes: Union[MplAxes3D, MplAxes]
     ) -> Union[_AxesProxy, _AxesProxy3D]:
