@@ -89,8 +89,7 @@ We can also write the plot to a file directly:
 What does, what does not get serialized?
 ----------------------------------------
 
-PlotSerializer always reads out the data and colors. For some plots you explicitely have to ask for the colors to be shown inside the JSON.
-Further supported parameters for the specific diagram type are explained in this documentation. Add those pages!
+PlotSerializer always reads out the data and if given, the colors. Further supported parameters will be specifically noted in this documentation.   
 Parameters which are used to make the diagram more appealing are not extracted by PlotSerializer. Instead they might distort the data in the JSON file.
 Because of this we recommend to run PlotSerializer first with your raw data, run it once, and simply add the all stylish choices for the plot after that.
 Similarly beware of modifying anywhere else besides the main methods, such as plot,pie,scatter. This will not be caught upon by PlotSerializer and the change will be ignored.
