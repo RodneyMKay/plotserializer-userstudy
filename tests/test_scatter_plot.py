@@ -59,7 +59,6 @@ def test_color_list_string() -> None:
     x = [1, 2, 3, 4, 3]
     y = [2, 1.5, 5, 0, 4]
     color = ["green", "blue", "red", "yellow", "black"]
-    sizes = [1, 5, 10, 20, 30]
 
     _, ax = serializer.subplots()
     ax.scatter(x, y, c=color)
