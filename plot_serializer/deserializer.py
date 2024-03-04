@@ -7,16 +7,18 @@ from plot_serializer.model import (
     Plot2D,
     LineTrace2D,
     BarTrace2D,
+    Plot3D,
     ScatterTrace2D,
+    ScatterTrace3D,
 )
 
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.axes import Axes as MplAxes
 
 
 class Deserializer:
-    # FIXME add filename parameter
-    def json_to_figure(self, filename: str) -> Figure:
+    def _json_to_figure(self, filename: str) -> Figure:
         dirname = os.path.dirname(__file__)
         filename = os.path.join(dirname, filename)
         with open(filename, "r") as openfile:
@@ -26,10 +28,18 @@ class Deserializer:
         figure = Figure.model_validate_json(json_data=json.dumps(d))
         return figure
 
-    # FIXME add filename parameter
-    def json_to_matplotlib_figure(self, filename: str) -> None:
-        model_figure = self.json_to_figure(filename=filename)
-        fig, axs = plt.subplots(len(model_figure.plots))
+    def json_to_matplotlib(self, filename: str) -> None:
+        model_figure = self._json_to_figure(filename=filename)
+        # Assuming that only subplots is used and
+        # that if 3d plots are created all plots are
+        # 3d. (Which is the only case possible
+        # with subplots unless bypassed)
+        if model_figure.plots[0].type == "3d":
+            fig, axs = plt.subplots(
+                len(model_figure.plots), subplot_kw={"projection": "3d"}
+            )
+        else:
+            fig, axs = plt.subplots(len(model_figure.plots))
         if len(model_figure.plots) == 1:
             axs = [axs]  # make axs subcribtable
         if model_figure.title is not None:
@@ -40,12 +50,14 @@ class Deserializer:
                 axs[i].title.set_text(plot.title)
             if isinstance(plot, Plot2D):
                 self._parse_Plot2D(plot, axs[i])
+            elif isinstance(plot, Plot3D):
+                self._parse_Plot3D(plot, axs[i])
             elif isinstance(plot, PiePlot):
                 self._parse_PiePlot(plot, axs[i])
             i += 1
         plt.show()
 
-    def _parse_axis(self, plot: Plot2D, ax: MplAxes) -> None:
+    def _parse_axis2D(self, plot: Plot2D, ax: MplAxes) -> None:
         # FIXME make sure this is not causing erros for unspecified scales
         ax.set_xlabel("" if plot.x_axis.label is None else plot.x_axis.label)
         ax.set_xscale("" if plot.x_axis.scale is None else plot.x_axis.scale)
@@ -53,17 +65,9 @@ class Deserializer:
         ax.set_yscale("" if plot.y_axis.scale is None else plot.y_axis.scale)
 
     def _parse_Plot2D(self, p: Plot2D, ax: MplAxes) -> None:
-        self._parse_axis(p, ax)
+        self._parse_axis2D(p, ax)
         if p.title is not None:
             plt.title(p.title)
-        if p.x_axis.label is not None:
-            ax.set_xlabel(p.x_axis.label)
-        if p.x_axis.scale is not None:
-            ax.set_xscale(p.x_axis.scale)
-        if p.y_axis.label is not None:
-            ax.set_ylabel(p.y_axis.label)
-        if p.x_axis.scale is not None:
-            ax.set_yscale(p.x_axis.scale)
         for trace in p.traces:
             if isinstance(trace, LineTrace2D):
                 self._parse_LineTrace2D(trace=trace, ax=ax)
@@ -92,10 +96,21 @@ class Deserializer:
     def _parse_ScatterTrace2D(self, trace: ScatterTrace2D, ax: MplAxes) -> None:
         x = []
         y = []
+        color: list[str] = []
+        size: list[float] = []
         for point in trace.datapoints:
             x.append(point.x)
             y.append(point.y)
-        ax.scatter(x, y)
+            if point.color is not None:
+                color.append(point.color)
+            if point.size is not None:
+                size.append(point.size)
+        ax.scatter(
+            x,
+            y,
+            c=color if color != [] else None,
+            s=size if size != [] else mpl.rcParams["lines.markersize"] ** 2,
+        )
 
     def _parse_BarTrace2D(self, trace: BarTrace2D, ax: MplAxes) -> None:
         label = []
@@ -107,6 +122,51 @@ class Deserializer:
             if bar.color is not None:
                 color.append(bar.color)
         ax.bar(label, y, color=color if color != [] else None)
+
+    def _parse_axis3D(self, plot: Plot3D, ax: MplAxes) -> None:
+        # FIXME make sure this is not causing erros for unspecified scales
+        ax.set_xlabel("" if plot.x_axis.label is None else plot.x_axis.label)
+        ax.set_xscale("" if plot.x_axis.scale is None else plot.x_axis.scale)
+        ax.set_ylabel("" if plot.y_axis.label is None else plot.y_axis.label)
+        ax.set_yscale("" if plot.y_axis.scale is None else plot.y_axis.scale)
+        # TODO: part of docu but not found here
+        ax.set_zlabel(
+            "" if plot.z_axis.label is None else plot.z_axis.label, rotation=90
+        )
+        ax.zaxis.labelpad = -0.7
+        # https://stackoverflow.com/questions/75275130/z-label-does-not-show-up-in-3d-matplotlib-scatter-plot
+        ax.set_zscale("" if plot.z_axis.scale is None else plot.z_axis.scale)
+
+    def _parse_Plot3D(self, p: Plot3D, ax: MplAxes) -> None:
+        # TODO: parse 3d axis
+        self._parse_axis3D(p, ax)
+        if p.title is not None:
+            plt.title(p.title)
+        for trace in p.traces:
+            if isinstance(trace, ScatterTrace3D):
+                self._parse_ScatterTrace3D(trace=trace, ax=ax)
+
+    def _parse_ScatterTrace3D(self, trace: ScatterTrace3D, ax: MplAxes) -> None:
+        x = []
+        y = []
+        z = []
+        color: list[str] = []
+        size: list[float] = []
+        for point in trace.datapoints:
+            x.append(point.x)
+            y.append(point.y)
+            z.append(point.z)
+            if point.color is not None:
+                color.append(point.color)
+            if point.size is not None:
+                size.append(point.size)
+        ax.scatter3D(
+            x,
+            y,
+            z,
+            c=color if color != [] else None,
+            s=size if size != [] else mpl.rcParams["lines.markersize"] ** 2,
+        )
 
     def _parse_PiePlot(self, p: PiePlot, ax: MplAxes) -> None:
         size = []
