@@ -264,25 +264,6 @@ class _AxesProxy(Proxy[MplAxes]):
             self._plot.y_axis.label = ylabel
             self._plot.y_axis.scale = yscale
 
-        elif isinstance(self._plot, Plot3D):
-            xlabel = self.delegate.get_xlabel()
-            xscale = _convert_matplotlib_scale(self.delegate.get_xscale())
-
-            self._plot.x_axis.label = xlabel
-            self._plot.x_axis.scale = xscale
-
-            ylabel = self.delegate.get_ylabel()
-            yscale = _convert_matplotlib_scale(self.delegate.get_yscale())
-
-            self._plot.y_axis.label = ylabel
-            self._plot.y_axis.scale = yscale
-
-            zlabel = self.delegate.get_zlabel()
-            zscale = _convert_matplotlib_scale(self.delegate.get_zscale())
-
-            self._plot.z_axis.label = zlabel
-            self._plot.z_axis.scale = zscale
-
         self._figure.plots.append(self._plot)
 
 
@@ -441,19 +422,6 @@ class _AxesProxy3D(Proxy[MplAxes3D]):
 
             self._plot.z_axis.label = zlabel
             self._plot.z_axis.scale = zscale
-
-        elif isinstance(self._plot, Plot2D):
-            xlabel = self.delegate.get_xlabel()
-            xscale = _convert_matplotlib_scale(self.delegate.get_xscale())
-
-            self._plot.x_axis.label = xlabel
-            self._plot.x_axis.scale = xscale
-
-            ylabel = self.delegate.get_ylabel()
-            yscale = _convert_matplotlib_scale(self.delegate.get_yscale())
-
-            self._plot.y_axis.label = ylabel
-            self._plot.y_axis.scale = yscale
 
         self._figure.plots.append(self._plot)
 
