@@ -14,7 +14,6 @@ from matplotlib.axes import Axes as MplAxes
 
 from plot_serializer.serializer import Serializer
 
-
 class MatplotlibSerializer(Serializer):
     # Fancy way of properly type hinting the subplots method...
     @overload
@@ -28,11 +27,10 @@ class MatplotlibSerializer(Serializer):
         squeeze: bool = True,
         width_ratios: Optional[Sequence[float]] = None,
         height_ratios: Optional[Sequence[float]] = None,
-        subplot_kw: Optional[Dict[str, Any]] = None,
+        subplot_kw: None = None,
         gridspec_kw: Optional[Dict[str, Any]] = None,
         **fig_kw: Any,
     ) -> Tuple[MplFigure, MplAxes]: ...
-
     @overload
     def subplots(
         self,
