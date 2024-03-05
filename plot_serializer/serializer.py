@@ -48,24 +48,35 @@ class Serializer(ABC):
 
         return self._figure.model_copy(deep=True)
 
-    def to_json(self) -> str:
+    def to_json(self, *, emit_warnings: bool = True) -> str:
         """
         Returns the data that has been collected so far as a json-encoded string.
+
+        Args:
+            emit_warnings (bool): If set to True (default), warnings about missing graph properties will be logged
 
         Returns:
             str: Json string
         """
-        return self.serialized_figure().model_dump_json(indent=2, exclude_defaults=True)
+        figure = self.serialized_figure()
 
-    def write_json_file(self, file: Union[TextIO, str]) -> None:
+        if emit_warnings:
+            figure.emit_warnings()
+
+        return figure.model_dump_json(indent=2, exclude_defaults=True)
+
+    def write_json_file(
+        self, file: Union[TextIO, str], *, emit_warnings: bool = True
+    ) -> None:
         """
         Writes the collected data as json to a file on disk.
 
         Args:
             file (Union[TextIO, str]): Either a filepath as string or a TextIO object
+            emit_warnings (bool): If set to True (default), warnings about missing graph properties will be logged
         """
         if isinstance(file, str):
             with open(file, "w") as file:
                 self.write_json_file(file)
         else:
-            file.write(self.to_json())
+            file.write(self.to_json(emit_warnings=emit_warnings))
