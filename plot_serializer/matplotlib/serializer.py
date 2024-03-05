@@ -1,3 +1,4 @@
+import logging
 from typing import (
     Any,
     Iterable,
@@ -46,6 +47,52 @@ from plot_serializer.model import (
 
 __all__ = ["MatplotlibSerializer"]
 
+PLOTTING_METHODS = [
+    "plot",
+    "errorbar",
+    "scatter",
+    "step",
+    "loglog",
+    "semilogx",
+    "semilogy",
+    "bar",
+    "barh",
+    "stem",
+    "eventplot",
+    "pie",
+    "stackplot",
+    "broken_barh",
+    "fill",
+    "acorr",
+    "angle_spectrum",
+    "cohere",
+    "csd",
+    "magnitude_spectrum",
+    "phase_spectrum",
+    "psd",
+    "specgram",
+    "xcorr",
+    "ecdf",
+    "boxplot",
+    "violinplot",
+    "bxp",
+    "violin",
+    "hexbin",
+    "hist",
+    "hist2d",
+    "contour",
+    "contourf",
+    "imshow",
+    "matshow",
+    "pcolor",
+    "pcolorfast",
+    "pcolormesh",
+    "spy",
+    "tripcolor",
+    "triplot",
+    "tricontour" "tricontourf",
+]
+
 
 def _convert_matplotlib_scale(scale: str) -> Scale:
     if scale == "linear":
@@ -76,105 +123,136 @@ class _AxesProxy(Proxy[MplAxes]):
 
     # FIXME: size_list cannot only be floats, but also different other types of data
     def pie(self, size_list: Iterable[float], **kwargs: Any) -> Any:
-        if self._plot is not None:
-            raise NotImplementedError(
-                "PlotSerializer does not yet support adding multiple plots per axes!"
-            )
+        result = self.delegate.pie(size_list, **kwargs)
 
-        slices: List[Slice] = []
-
-        color_list = kwargs.get("colors") or []
-        explode_list = kwargs.get("explode") or []
-        label_list = kwargs.get("labels") or []
-        radius_list = kwargs.get("radius") or []
-
-        for i, size in enumerate(size_list):
-            color = color_list[i] if i < len(color_list) else None
-            explode = explode_list[i] if i < len(explode_list) else None
-            label = label_list[i] if i < len(label_list) else None
-            radius = radius_list[i] if i < len(radius_list) else None
-
-            slices.append(
-                Slice(
-                    size=size,
-                    radius=radius,
-                    offset=explode,
-                    name=label,
-                    color=_convert_matplotlib_color(color),
+        try:
+            if self._plot is not None:
+                raise NotImplementedError(
+                    "PlotSerializer does not yet support adding multiple plots per axes!"
                 )
+
+            slices: List[Slice] = []
+
+            color_list = kwargs.get("colors") or []
+            explode_list = kwargs.get("explode") or []
+            label_list = kwargs.get("labels") or []
+            radius_list = kwargs.get("radius") or []
+
+            for i, size in enumerate(size_list):
+                color = color_list[i] if i < len(color_list) else None
+                explode = explode_list[i] if i < len(explode_list) else None
+                label = label_list[i] if i < len(label_list) else None
+                radius = radius_list[i] if i < len(radius_list) else None
+
+                slices.append(
+                    Slice(
+                        size=size,
+                        radius=radius,
+                        offset=explode,
+                        name=label,
+                        color=_convert_matplotlib_color(color),
+                    )
+                )
+
+            pie_plot = PiePlot(type="pie", slices=slices)
+            self._plot = pie_plot
+        except Exception as e:
+            logging.warning(
+                "An unexpected error occurred in PlotSerializer when trying to read plot data! "
+                + "Parts of the plot will not be serialized!",
+                exc_info=e,
             )
 
-        pie_plot = PiePlot(type="pie", slices=slices)
-        self._plot = pie_plot
-        return self.delegate.pie(size_list, **kwargs)
+        return result
 
     # FIXME: name_list and height_list cannot only be floats, but also different other types of data
     def bar(
         self, label_list: Iterable[str], height_list: Iterable[float], **kwargs: Any
     ) -> BarContainer:
-        bars: List[Bar2D] = []
+        result = self.delegate.bar(label_list, height_list, **kwargs)
 
-        color_list = kwargs.get("color") or []
+        try:
+            bars: List[Bar2D] = []
 
-        for i, label in enumerate(label_list):
-            height = height_list[i]
-            color = color_list[i] if i < len(color_list) else None
+            color_list = kwargs.get("color") or []
 
-            bars.append(
-                Bar2D(y=height, label=label, color=_convert_matplotlib_color(color))
-            )
+            for i, label in enumerate(label_list):
+                height = height_list[i]
+                color = color_list[i] if i < len(color_list) else None
 
-        trace = BarTrace2D(type="bar", datapoints=bars)
-
-        if self._plot is not None:
-            if not isinstance(self._plot, Plot2D):
-                raise NotImplementedError(
-                    "PlotSerializer does not yet support mixing 2d plots with other plots!"
+                bars.append(
+                    Bar2D(y=height, label=label, color=_convert_matplotlib_color(color))
                 )
 
-            self._plot.traces.append(trace)
-        else:
-            self._plot = Plot2D(type="2d", x_axis=Axis(), y_axis=Axis(), traces=[trace])
+            trace = BarTrace2D(type="bar", datapoints=bars)
 
-        return self.delegate.bar(label_list, height_list, **kwargs)
+            if self._plot is not None:
+                if not isinstance(self._plot, Plot2D):
+                    raise NotImplementedError(
+                        "PlotSerializer does not yet support mixing 2d plots with other plots!"
+                    )
+
+                self._plot.traces.append(trace)
+            else:
+                self._plot = Plot2D(
+                    type="2d", x_axis=Axis(), y_axis=Axis(), traces=[trace]
+                )
+        except Exception as e:
+            logging.warning(
+                "An unexpected error occurred in PlotSerializer when trying to read plot data! "
+                + "Parts of the plot will not be serialized!",
+                exc_info=e,
+            )
+
+        return result
 
     def plot(self, *args: Any, **kwargs: Any) -> list[Line2D]:
         mpl_lines = self.delegate.plot(*args, **kwargs)
-        traces: List[LineTrace2D] = []
 
-        for mpl_line in mpl_lines:
-            xdata = mpl_line.get_xdata()
-            ydata = mpl_line.get_ydata()
+        try:
+            traces: List[LineTrace2D] = []
 
-            points: List[Point2D] = []
+            for mpl_line in mpl_lines:
+                xdata = mpl_line.get_xdata()
+                ydata = mpl_line.get_ydata()
 
-            for x, y in zip(xdata, ydata):
-                points.append(Point2D(x=x, y=y))
+                points: List[Point2D] = []
 
-            label = mpl_line.get_label()
-            color = _convert_matplotlib_color(mpl_line.get_color())
-            thickness = mpl_line.get_linewidth()
-            linestyle = mpl_line.get_linestyle()
+                for x, y in zip(xdata, ydata):
+                    points.append(Point2D(x=x, y=y))
 
-            traces.append(
-                LineTrace2D(
-                    type="line",
-                    line_color=color,
-                    line_thickness=thickness,
-                    line_style=linestyle,
-                    label=label,
-                    datapoints=points,
+                label = mpl_line.get_label()
+                color = _convert_matplotlib_color(mpl_line.get_color())
+                thickness = mpl_line.get_linewidth()
+                linestyle = mpl_line.get_linestyle()
+
+                traces.append(
+                    LineTrace2D(
+                        type="line",
+                        line_color=color,
+                        line_thickness=thickness,
+                        line_style=linestyle,
+                        label=label,
+                        datapoints=points,
+                    )
                 )
+
+            if self._plot is not None:
+                if not isinstance(self._plot, Plot2D):
+                    raise NotImplementedError(
+                        "PlotSerializer does not yet support mixing 2d plots with other plots!"
+                    )
+                self._plot.traces += traces
+            else:
+                self._plot = Plot2D(
+                    type="2d", x_axis=Axis(), y_axis=Axis(), traces=traces
+                )
+        except Exception as e:
+            logging.warning(
+                "An unexpected error occurred in PlotSerializer when trying to read plot data! "
+                + "Parts of the plot will not be serialized!",
+                exc_info=e,
             )
-
-        if self._plot is not None:
-            if not isinstance(self._plot, Plot2D):
-                raise NotImplementedError(
-                    "PlotSerializer does not yet support mixing 2d plots with other plots!"
-                )
-            self._plot.traces += traces
-        else:
-            self._plot = Plot2D(type="2d", x_axis=Axis(), y_axis=Axis(), traces=traces)
 
         return mpl_lines
 
@@ -188,61 +266,75 @@ class _AxesProxy(Proxy[MplAxes]):
         **kwargs: Any,
     ) -> PathCollection:
         path = self.delegate.scatter(x_values, y_values, *args, **kwargs)
-        color_list = kwargs.get("c") or []
-        sizes_list = kwargs.get("s") or []
-        enable_colors: bool = True
-        enable_sizes: bool = True
-        if not color_list:
-            enable_colors = False
-        if not sizes_list:
-            enable_sizes = False
 
-        trace: List[ScatterTrace2D] = []
-        label = str(path.get_label())
-        datapoints: List[Point2D] = []
+        try:
+            color_list = kwargs.get("c") or []
+            sizes_list = kwargs.get("s") or []
+            enable_colors: bool = True
+            enable_sizes: bool = True
 
-        verteces = path.get_offsets().tolist()
-        colors = path.get_facecolor().tolist()
-        sizes = path.get_sizes().tolist()
+            if not color_list:
+                enable_colors = False
+            if not sizes_list:
+                enable_sizes = False
 
-        # extend lists when only containing one element
-        if not (len(colors) - 1):
-            colors = [colors[0] for i in range(len(verteces))]
-        if not (len(sizes) - 1):
-            sizes = [sizes[0] for i in range(len(verteces))]
+            trace: List[ScatterTrace2D] = []
+            label = str(path.get_label())
+            datapoints: List[Point2D] = []
 
-        if not (len(colors) == len(verteces) == len(sizes)):
-            raise NotImplementedError(
-                "A different amount of sizes/colors and points is not implemented by matplotlib or plotserializer"
-            )
+            verteces = path.get_offsets().tolist()
+            colors = path.get_facecolor().tolist()
+            sizes = path.get_sizes().tolist()
 
-        for index, vertex in enumerate(verteces):
-            color = (
-                mcolors.to_hex(colors[index], keep_alpha=True)
-                if enable_colors
-                else None
-            )
-            size = sizes[index] if enable_sizes else None
+            # extend lists when only containing one element
+            if not (len(colors) - 1):
+                colors = [colors[0] for i in range(len(verteces))]
+            if not (len(sizes) - 1):
+                sizes = [sizes[0] for i in range(len(verteces))]
 
-            datapoints.append(
-                Point2D(
-                    x=vertex[0],
-                    y=vertex[1],
-                    color=color,
-                    size=size,
-                )
-            )
-
-        trace.append(ScatterTrace2D(type="scatter", label=label, datapoints=datapoints))
-
-        if self._plot is not None:
-            if not isinstance(self._plot, Plot2D):
+            if not (len(colors) == len(verteces) == len(sizes)):
                 raise NotImplementedError(
-                    "PlotSerializer does not yet support mixing 2d plots with other plots!"
+                    "A different amount of sizes/colors and points is not implemented by matplotlib or plotserializer"
                 )
-            self._plot.traces += trace
-        else:
-            self._plot = Plot2D(type="2d", x_axis=Axis(), y_axis=Axis(), traces=trace)
+
+            for index, vertex in enumerate(verteces):
+                color = (
+                    mcolors.to_hex(colors[index], keep_alpha=True)
+                    if enable_colors
+                    else None
+                )
+                size = sizes[index] if enable_sizes else None
+
+                datapoints.append(
+                    Point2D(
+                        x=vertex[0],
+                        y=vertex[1],
+                        color=color,
+                        size=size,
+                    )
+                )
+
+            trace.append(
+                ScatterTrace2D(type="scatter", label=label, datapoints=datapoints)
+            )
+
+            if self._plot is not None:
+                if not isinstance(self._plot, Plot2D):
+                    raise NotImplementedError(
+                        "PlotSerializer does not yet support mixing 2d plots with other plots!"
+                    )
+                self._plot.traces += trace
+            else:
+                self._plot = Plot2D(
+                    type="2d", x_axis=Axis(), y_axis=Axis(), traces=trace
+                )
+        except Exception as e:
+            logging.warning(
+                "An unexpected error occurred in PlotSerializer when trying to read plot data! "
+                + "Parts of the plot will not be serialized!",
+                exc_info=e,
+            )
+
         return path
 
     def _on_collect(self) -> None:
@@ -266,6 +358,14 @@ class _AxesProxy(Proxy[MplAxes]):
 
         self._figure.plots.append(self._plot)
 
+    def __getattr__(self, __name: str) -> Any:
+        if __name in PLOTTING_METHODS:
+            logging.warning(
+                f"{__name} is not supported by PlotSerializer! Data will be lost!"
+            )
+
+        return super().__getattr__(__name)
+
 
 class _AxesProxy3D(Proxy[MplAxes3D]):
     def __init__(
@@ -284,77 +384,87 @@ class _AxesProxy3D(Proxy[MplAxes3D]):
         *args: Any,
         **kwargs: Any,
     ) -> Path3DCollection:
-        color_list = kwargs.get("c") or []
-        sizes_list = kwargs.get("s") or []
-        cmap = kwargs.get("cmap") or "viridis"
-        norm = kwargs.get("norm") or "linear"
-        enable_colors: bool = True
-        enable_sizes: bool = True
-
-        if not x_values or not y_values or not z_values:
-            raise ValueError("one of your x,y,z data is missing")
-        if isinstance(x_values, float) or isinstance(x_values, int):
-            x_values = [x_values]
-        if isinstance(y_values, float) or isinstance(y_values, int):
-            y_values = [y_values]
-        if isinstance(z_values, float) or isinstance(z_values, int):
-            z_values = [z_values]
-        if not sizes_list:
-            enable_sizes = False
-        if not color_list:
-            enable_colors = False
-        if isinstance(sizes_list, float) or isinstance(sizes_list, int):
-            sizes_list = [sizes_list]
-
-        if not (len(x_values) == len(y_values) == len(z_values)):
-            raise ValueError(
-                "the x,y,z arrays do not contain the same amount of elements"
-            )
-        trace: List[ScatterTrace3D] = []
-        datapoints: List[Point3D] = []
-
-        sizes: List[float] = []
-        if enable_sizes:
-            if not (len(x_values) == len(sizes_list)):
-                if not (len(sizes_list) - 1):
-                    sizes = [sizes_list[0] for i in range(len(x_values))]
-                else:
-                    raise ValueError(
-                        "sizes list does contain more than one element while not being as long as the x_values array"
-                    )
-            else:
-                sizes = sizes_list
-        else:
-            sizes = [None] * len(x_values)
-
-        colors: List[str] = []
-        if enable_colors:
-            scalar_mappable = cm.ScalarMappable(norm=norm, cmap=cmap)
-            colors = self._get_colors_scatter(
-                color_list, scalar_mappable, len(x_values)
-            )
-        else:
-            colors = [None] * len(x_values)
-
-        for i in range(len(x_values)):
-            c = colors[i]
-            s = sizes[i]
-            datapoints.append(
-                Point3D(x=x_values[i], y=y_values[i], z=z_values[i], color=c, size=s)
-            )
-
         path = self.delegate.scatter(x_values, y_values, z_values, *args, **kwargs)
-        label = str(path.get_label())
 
-        trace.append(
-            ScatterTrace3D(type="scatter3D", label=label, datapoints=datapoints)
-        )
+        try:
+            color_list = kwargs.get("c") or []
+            sizes_list = kwargs.get("s") or []
+            cmap = kwargs.get("cmap") or "viridis"
+            norm = kwargs.get("norm") or "linear"
+            enable_colors: bool = True
+            enable_sizes: bool = True
 
-        if self._plot is not None:
-            self._plot.traces += trace
-        else:
-            self._plot = Plot3D(
-                type="3d", x_axis=Axis(), y_axis=Axis(), z_axis=Axis(), traces=trace
+            if not x_values or not y_values or not z_values:
+                raise ValueError("one of your x,y,z data is missing")
+            if isinstance(x_values, float) or isinstance(x_values, int):
+                x_values = [x_values]
+            if isinstance(y_values, float) or isinstance(y_values, int):
+                y_values = [y_values]
+            if isinstance(z_values, float) or isinstance(z_values, int):
+                z_values = [z_values]
+            if not sizes_list:
+                enable_sizes = False
+            if not color_list:
+                enable_colors = False
+            if isinstance(sizes_list, float) or isinstance(sizes_list, int):
+                sizes_list = [sizes_list]
+
+            if not (len(x_values) == len(y_values) == len(z_values)):
+                raise ValueError(
+                    "the x,y,z arrays do not contain the same amount of elements"
+                )
+            trace: List[ScatterTrace3D] = []
+            datapoints: List[Point3D] = []
+
+            sizes: List[float] = []
+            if enable_sizes:
+                if not (len(x_values) == len(sizes_list)):
+                    if not (len(sizes_list) - 1):
+                        sizes = [sizes_list[0] for i in range(len(x_values))]
+                    else:
+                        raise ValueError(
+                            "sizes list contains more than one element while not being as long as the x_values array"
+                        )
+                else:
+                    sizes = sizes_list
+            else:
+                sizes = [None] * len(x_values)
+
+            colors: List[str] = []
+            if enable_colors:
+                scalar_mappable = cm.ScalarMappable(norm=norm, cmap=cmap)
+                colors = self._get_colors_scatter(
+                    color_list, scalar_mappable, len(x_values)
+                )
+            else:
+                colors = [None] * len(x_values)
+
+            for i in range(len(x_values)):
+                c = colors[i]
+                s = sizes[i]
+                datapoints.append(
+                    Point3D(
+                        x=x_values[i], y=y_values[i], z=z_values[i], color=c, size=s
+                    )
+                )
+
+            label = str(path.get_label())
+
+            trace.append(
+                ScatterTrace3D(type="scatter3D", label=label, datapoints=datapoints)
+            )
+
+            if self._plot is not None:
+                self._plot.traces += trace
+            else:
+                self._plot = Plot3D(
+                    type="3d", x_axis=Axis(), y_axis=Axis(), z_axis=Axis(), traces=trace
+                )
+        except Exception as e:
+            logging.warning(
+                "An unexpected error occurred in PlotSerializer when trying to read plot data! "
+                + "Parts of the plot will not be serialized!",
+                exc_info=e,
             )
 
         return path
@@ -424,6 +534,14 @@ class _AxesProxy3D(Proxy[MplAxes3D]):
             self._plot.z_axis.scale = zscale
 
         self._figure.plots.append(self._plot)
+
+    def __getattr__(self, __name: str) -> Any:
+        if __name in PLOTTING_METHODS:
+            logging.warning(
+                f"{__name} is not supported by PlotSerializer! Data will be lost!"
+            )
+
+        return super().__getattr__(__name)
 
 
 class MatplotlibSerializer(Serializer):
