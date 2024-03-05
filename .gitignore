@@ -17,8 +17,7 @@ __pycache__
 !/pyproject.toml
 !/requirements.txt
 
-!/userstudy.ipynb
-!/userstudy.json
+!/userstudy*.ipynb
 
 # Ignore autosummary from documentation
 /doc/_autosummary
