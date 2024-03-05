@@ -183,9 +183,6 @@ def _deserialize_scattertrace3d(trace: ScatterTrace3D, ax: MplAxes3D) -> None:
             else _MATPLOTLIB_DEFAULT_3D_SCATTER_SIZE
         )
 
-    if len(x) != len(size):
-        raise ValueError("Test")
-
     ax.scatter(
         x,
         y,
