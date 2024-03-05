@@ -42,8 +42,6 @@ class Point2D(BaseModel):
     def emit_warnings(self) -> None:
         msg = []
 
-        if self.color is None or len(self.color.lstrip()) == 0:
-            msg.append("color")
         if self.size is None:
             msg.append("size")
 
@@ -61,8 +59,6 @@ class Point3D(BaseModel):
     def emit_warnings(self) -> None:
         msg = []
 
-        if self.color is None or len(self.color.lstrip()) == 0:
-            msg.append("color")
         if self.size is None:
             msg.append("size")
 
@@ -117,12 +113,6 @@ class LineTrace2D(BaseModel):
     def emit_warnings(self) -> None:
         msg = []
 
-        if self.line_color is None or len(self.line_color.lstrip()) == 0:
-            msg.append("line_color")
-        if self.line_thickness is None:
-            msg.append("line_thickness")
-        if self.line_style is None or len(self.line_style.lstrip()) == 0:
-            msg.append("line_style")
         if self.label is None or len(self.label.lstrip()) == 0:
             msg.append("label")
 
@@ -226,10 +216,6 @@ class Slice(BaseModel):
     def emit_warnings(self) -> None:
         msg = []
 
-        if self.radius is None:
-            msg.append("radius")
-        if self.offset is None:
-            msg.append("offset")
         if self.name is None or len(self.name.lstrip()) == 0:
             msg.append("name")
         if self.color is None or len(self.color.lstrip()) == 0:
