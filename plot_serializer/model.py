@@ -40,10 +40,8 @@ class Point2D(BaseModel):
     size: Optional[float] = None
 
     def emit_warnings(self) -> None:
-        msg = []
-
-        if self.size is None:
-            msg.append("size")
+        msg: List[str] = []
+        # TODO: Improve the warning system
 
         if len(msg) > 0:
             logging.warning("%s is not set for Point2D.", msg)
